@@ -3,14 +3,18 @@
 
 int main()
 {
-    int i = 0;
+    int i = 1;
     int amount;
 
     std::cout << "How many numbers would you like to have? ";
     std::cin >> amount;
-    // Write your code here
+
     while ( i <= amount ){
-        std::cout << i << std::endl;
+        if ( i % 3 == 0 ){
+            std::cout << "zip" << std::endl;
+        } else{
+            std::cout << i << std::endl;
+        }
         ++i;
     }
 
