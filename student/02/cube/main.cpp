@@ -12,7 +12,7 @@ int main()
 
     cube = pow(number, 3);
     if (cbrt(cube) == number){
-        cout << "The cube of " << number << " is " << cube << endl;
+        cout << "The cube of " << number << " is " << cube << "." << endl;
     } else {
         cout << "Error! The cube of " << number << " is not " << cube << endl;
     }
