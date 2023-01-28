@@ -7,7 +7,7 @@ int main()
 {
     int number;
     int cube;
-    cout << "Enter a number: " << endl;
+    cout << "Enter a number: ";
     cin >> number;
 
     cube = pow(number, 3);
