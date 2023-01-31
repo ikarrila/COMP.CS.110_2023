@@ -22,9 +22,9 @@ void Book::print()
         std::cout << "- available" << std::endl;
     } else {
         std::cout << "- loaned: ";
-        loanDate_.print();
-        std::cout << "- to be returned: ";
         returnDate_.print();
+        std::cout << "- to be returned: ";
+        loanDate_.print();
     }
 }
 
