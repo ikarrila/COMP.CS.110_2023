@@ -78,5 +78,5 @@ void Account::transfer_to(Account& destination, int amount){
 
 void Account::print() const
 {
-    std::cout << owner_ << " : " << iban_ << " : " << saldo_ << std::endl;
+    std::cout << owner_ << " : " << iban_ << " : " << saldo_ << " euros" << std::endl;
 }
