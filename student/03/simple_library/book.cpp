@@ -17,7 +17,7 @@ Book::Book(std::string name, std::string author, bool loaned):
 
 void Book::print()
 {
-    std::cout << author_ << " : " << name_ << std::endl;
+    std::cout << name_ << " : " << author_ << std::endl;
     if (loaned_ == false){
         std::cout << "- available" << std::endl;
     } else {
