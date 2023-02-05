@@ -40,7 +40,7 @@ bool same_values(const std::vector< int >& ints){
 bool is_ordered_non_strict_ascending(const std::vector< int >& ints){
     std::string::size_type i = 0;
     while ( i < ints.size()-1 ) {
-        if((ints.at(i)>=ints.at(i+1))){
+        if((ints.at(i)>ints.at(i+1))){
                 return false;
         }
         ++i;
@@ -49,14 +49,14 @@ bool is_ordered_non_strict_ascending(const std::vector< int >& ints){
 }
 
 bool is_arithmetic_series(const std::vector< int >& ints){
-    int difference = ints.at(1) - ints.at(2);
+    int diff = (ints[1] - ints[0]);
     std::string::size_type i = 0;
-    while ( i < ints.size()-2 ) {
-        if(difference != ints.at(i) - ints.at(i+1)){
+    while (i < (ints.size()-1)){
+        if(ints[i] + diff == ints[i+1]){
+            i++;
+        }else {
             return false;
         }
-        ++i;
-        difference = ints.at(i) - ints.at(i+1);
     }
     return true;
 }
