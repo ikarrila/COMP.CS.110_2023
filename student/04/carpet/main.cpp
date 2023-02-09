@@ -28,6 +28,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cstring>
 
 using namespace std;
 
@@ -106,12 +107,14 @@ bool readSize(int& x, int& y) {
 
         // Otherwise input processing continues
         cout << "Error: Carpet cannot be smaller than pattern." << endl;
+        return false;
     }
 }
 
 //Function checks if the given user input contains only colours we can use.
-bool isSuitableCarpetString(const string input) {
+bool isSuitableCarpetString(string& input) {
     for (string::size_type i = 0; i < input.length(); i++){
+        input[i] = toupper(input[i]);
         if (input[i] != 'R' && input[i] != 'G' && input[i] != 'W' && input[i] != 'B' && input[i] != 'Y'){
             cout << "Error: Unknown color." << endl;
             return false;
@@ -198,7 +201,7 @@ void matchFound(const vector<vector<Colour>>& board, string& input){
 
 //Asking the user the give 4-long carpet patch we'll be searching for.
 //Same checks as before with the "input custom carpet".
-bool readStringToSearch(const vector<vector<Colour>>& board){
+void readStringToSearch(const vector<vector<Colour>>& board){
     string input = "";
     while(true) {
 
@@ -206,7 +209,7 @@ bool readStringToSearch(const vector<vector<Colour>>& board){
         if(not(cin >> input)) {
             continue;
         } else if (input == "Q" or input == "q"){
-            return false;
+            break;
         } else if(input.length() != SEACH_SIZE_LIMIT) {
             cout << "Error: Wrong amount of colors." << endl;
             continue;
@@ -223,7 +226,9 @@ int main()
     int y = 0;
     int x = 0;
     string carpet = "";
-    readSize(x, y);
+    if (not readSize(x, y)){
+        return EXIT_FAILURE;
+    }
     readInitializationInput(Carpet, carpet, x, y);
 
     printBoard(Carpet, std::cout, x, y);
