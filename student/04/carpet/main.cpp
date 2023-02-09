@@ -31,6 +31,8 @@
 
 using namespace std;
 
+const int SEACH_SIZE_LIMIT = 4;
+
 enum Colour {RED, GREEN, BLUE, YELLOW, WHITE, NUMBER_OF_COLORS};
 const char CHARACTERS[] = {'R', 'G', 'B', 'Y', 'W'};
 
@@ -161,6 +163,42 @@ bool readInitializationInput(string& input, string carpet, string::size_type inp
     }
 }
 
+void matchFound(const vector<vector<Colour>>& board, string input){
+    int count = 0;
+    for(string::size_type y = 0; y < board.size(); y++){
+        for(string::size_type x = 0; x < board[0].size(); x++){
+            cout << "Searching for: " << input[0] << endl;
+            if (board[y][x] == input[0] && board[y][x+1] == input[1] && board[y+1][x+1] == input[2] && board[y+1][x] == input[3]){
+                cout << " - Found at (" << y << ", " << x << ")" << endl;
+                count++;
+            }
+        }
+    }
+    //return false;
+}
+
+bool readStringToSearch(const vector<vector<Colour>>& board){
+    string input = "";
+    while(true) {
+
+        cout << "Enter 4 colors, or q to quit: ";
+        if(not(cin >> input)) {
+            continue;
+        } else if (input == "Q" or input == "q"){
+            return false;
+        } else if(input.length() != SEACH_SIZE_LIMIT) {
+            cout << "Error: Wrong amount of colors." << endl;
+            continue;
+        // If valid coordinates can be read, program execution continues
+        } else if (isSuitableCarpetString(input)){
+            matchFound(board, input);
+            return true;
+        }
+        // Otherwise input processing continues
+        cout << "While-loop ended" << endl;
+    }
+}
+
 int main()
 {
     int y;
@@ -171,6 +209,7 @@ int main()
     readInitializationInput(str, carpet, (x*y), x, y);
 
     printBoard(Board, std::cout, x, y);
+    readStringToSearch(Board);
 
     return EXIT_SUCCESS;
 }
