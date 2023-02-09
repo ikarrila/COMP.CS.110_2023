@@ -133,7 +133,7 @@ bool readCarpetColours(string& input, string::size_type input_limit) {
         return false;
 }
 
-bool readInitializationInput(string& input, string carpet, string::size_type input_limit, int x, int y) {
+bool readInitializationInput(string& input, string carpet, int x, int y) {
     while(true) {
         cout << "Select start (R for random, I for input): ";
 
@@ -153,7 +153,7 @@ bool readInitializationInput(string& input, string carpet, string::size_type inp
         } else if (input == "i" or input == "I"){
 
             //if input is correct, create the carpet
-            if (readCarpetColours(carpet, input_limit)){
+            if (readCarpetColours(carpet, (x*y))){
                 initBoard(Board, x, y, "", carpet);
                 return true;
             }
@@ -163,18 +163,22 @@ bool readInitializationInput(string& input, string carpet, string::size_type inp
     }
 }
 
-void matchFound(const vector<vector<Colour>>& board, string input){
+void matchFound(const vector<vector<Colour>>& board, string& input){
     int count = 0;
     for(string::size_type y = 0; y < board.size(); y++){
-        for(string::size_type x = 0; x < board[0].size(); x++){
-            cout << "Searching for: " << input[0] << endl;
-            if (board[y][x] == input[0] && board[y][x+1] == input[1] && board[y+1][x+1] == input[2] && board[y+1][x] == input[3]){
+        for(string::size_type x = 0; x < board[0].size()-1; x++){
+            if (CHARACTERS[board[y][x]] == input[0] && CHARACTERS[board[y][x+1]] == input[1] && CHARACTERS[board[y+1][x+1]] == input[3] && CHARACTERS[board[y+1][x]] == input[2]){
                 cout << " - Found at (" << y << ", " << x << ")" << endl;
                 count++;
+                //jumping out of the loop with 2x2 fields to avoid segmentation fault
+                if (board.size() == 2 && board[0].size() == 2){
+                    goto jump;
+                }
             }
         }
     }
-    //return false;
+    jump:
+    cout << " = Matches found: " << count << endl;
 }
 
 bool readStringToSearch(const vector<vector<Colour>>& board){
@@ -192,21 +196,20 @@ bool readStringToSearch(const vector<vector<Colour>>& board){
         // If valid coordinates can be read, program execution continues
         } else if (isSuitableCarpetString(input)){
             matchFound(board, input);
-            return true;
         }
         // Otherwise input processing continues
-        cout << "While-loop ended" << endl;
+        cout << "Loop" << endl;
     }
 }
 
 int main()
 {
-    int y;
-    int x;
+    int y = 0;
+    int x = 0;
     string str = "";
     string carpet = "";
     readSize(x, y);
-    readInitializationInput(str, carpet, (x*y), x, y);
+    readInitializationInput(str, carpet, x, y);
 
     printBoard(Board, std::cout, x, y);
     readStringToSearch(Board);
