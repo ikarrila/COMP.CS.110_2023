@@ -27,6 +27,7 @@
 #include <random>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -35,12 +36,8 @@ const char CHARACTERS[] = {'R', 'G', 'B', 'Y', 'W'};
 
 vector<vector<Colour>> Board = {};
 
-void initBoard( vector<vector<Colour>>& board, int& x_size, int& y_size) {
+void initBoard( vector<vector<Colour>>& board, int& x_size, int& y_size, string seed_value="", string input="") {
     default_random_engine rand_gen;
-
-    cout << "Enter a seed value or an empty line: ";
-    string seed_value = "";
-    getline(cin, seed_value);
 
     if( seed_value == "" ) {
         // If the user did not give a seed value,
@@ -50,28 +47,40 @@ void initBoard( vector<vector<Colour>>& board, int& x_size, int& y_size) {
         // If the user gave a seed value, use it.
         rand_gen.seed( stoi(seed_value) );
     }
-
-    // Filling the board with random numbers between 0 and 4
-    // These random numbers correspond to possible colours
-    uniform_int_distribution<int> distribution(0, 4);
-    for( int y = 0; y < y_size; ++y ) {
-        vector< Colour > row;
-        for( int x = 0; x < x_size; ++x ) {
-            row.push_back( static_cast<Colour>(distribution(rand_gen)) );
+    if (input == "") {
+        // Filling the board with random numbers between 0 and 4
+        // These random numbers correspond to possible colours
+        uniform_int_distribution<int> distribution(0, 4);
+        for( int y = 0; y < y_size; ++y ) {
+            vector< Colour > row;
+            for( int x = 0; x < x_size; ++x ) {
+                row.push_back( static_cast<Colour>(distribution(rand_gen)) );
+            }
+            board.push_back( row );
         }
-        board.push_back( row );
+    } else {
+        //Filling the board with input string given by user
+        string::size_type i = 0;
+        for( int y = 0; y < y_size; ++y ) {
+            vector< Colour > row;
+            for( int x = 0; x < x_size; ++x ) {
+                int char_index = distance(CHARACTERS, find(CHARACTERS, CHARACTERS + 5, input[i]));
+                row.push_back( static_cast<Colour>(char_index) );
+                i++;
+            }
+            board.push_back( row );
+        }
     }
 }
 
 void printBoard( const vector<vector<Colour>>& board, std::ostream& stream, int& x_size, int& y_size ) {
     // Printing space after each character to make ASCII graphics clearer.
-    cout << endl;
     for( int y = 0; y < y_size; ++y ) {
         for( int x = 0; x < x_size; ++x ) {
             stream << CHARACTERS[board.at(y).at(x)];
             stream << " ";
         }
-        stream << std::endl;
+        stream << endl;
     }
 }
 
@@ -95,10 +104,8 @@ bool readSize(int& x, int& y) {
 }
 
 bool isSuitableCarpetString(string input) {
-    for (std::string::size_type i = 0; i < input.length(); i++){
-        if (input[i] == 'R' or input[i] == 'G' or input[i] == 'W' or input[i] == 'B' or input[i] == 'Y'){
-            cout << "(Match: " << input[i] << ")" << endl;
-        } else {
+    for (string::size_type i = 0; i < input.length(); i++){
+        if (input[i] != 'R' and input[i] != 'G' and input[i] != 'W' and input[i] != 'B' and input[i] != 'Y'){
             cout << "Error: Unknown color." << endl;
             return false;
         }
@@ -135,12 +142,17 @@ bool readInitializationInput(string& input, string carpet, string::size_type inp
 
         // If valid coordinates can be read, program execution continues
         if(input == "r" or input == "R") {
-            initBoard(Board, x, y);
+            string seed = "";
+            cout << "Enter a seed value or an empty line: ";
+            cin.ignore();
+            getline(cin, seed);
+            initBoard(Board, x, y, seed);
             return true;
         } else if (input == "i" or input == "I"){
 
             //if input is correct, create the carpet
             if (readCarpetColours(carpet, input_limit)){
+                initBoard(Board, x, y, "", carpet);
                 return true;
             }
         }
