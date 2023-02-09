@@ -179,23 +179,21 @@ bool readInitializationInput(vector<vector<Colour>>& carpet, string carpet_strin
 //Searches for matches from user input that have equivalents within the carpet
 //The way this works is that we'll go through the whole carpet line by line and
 //find matches from left to right and top to bottom. The first XY is printed when a match is found
-void matchFound(const vector<vector<Colour>>& board, string& input){
+void matchFound(const vector<vector<Colour>>& board, string input){
     int count = 0;
-    for(string::size_type y = 0; y < board.size(); y++){
+    for(string::size_type y = 0; y < board.size()-1; y++){
         for(string::size_type x = 0; x < board[0].size()-1; x++){
             if (CHARACTERS[board[y][x]] == input[0] && CHARACTERS[board[y][x+1]] == input[1] &&
                     CHARACTERS[board[y+1][x+1]] == input[3] && CHARACTERS[board[y+1][x]] == input[2]){
-                cout << " - Found at (" << y << ", " << x << ")" << endl;
+                cout << " - Found at (" << int(x+1) << ", " << int(y+1) << ")" << endl;
                 count++;
-                //Jumping out of the loop with 2x2 fields to avoid segmentation fault
-                //I tried to avoid goto at all costs but random segfault proved undefeatable
+                //Jumping out of the loop with 2x2 fields to avoid double count
                 if (board.size() == 2 && board[0].size() == 2){
-                    goto jump;
+                    continue;
                 }
             }
         }
     }
-    jump:
     cout << " = Matches found: " << count << endl;
 }
 
@@ -204,7 +202,6 @@ void matchFound(const vector<vector<Colour>>& board, string& input){
 void readStringToSearch(const vector<vector<Colour>>& board){
     string input = "";
     while(true) {
-
         cout << "Enter 4 colors, or q to quit: ";
         if(not(cin >> input)) {
             continue;
@@ -230,7 +227,6 @@ int main()
         return EXIT_FAILURE;
     }
     readInitializationInput(Carpet, carpet, x, y);
-
     printBoard(Carpet, std::cout, x, y);
     readStringToSearch(Carpet);
 
