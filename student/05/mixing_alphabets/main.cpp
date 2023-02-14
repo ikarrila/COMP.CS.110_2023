@@ -20,6 +20,9 @@ int main()
         }
 
         // TODO: implement your solution here
+        std::random_device rd{};
+        std::mt19937 gen{rd()};
+        std::shuffle(word.begin()+1,word.end()-1, gen);
 	
         std::cout << word << std::endl;
     }
