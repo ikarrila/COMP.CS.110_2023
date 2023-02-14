@@ -34,7 +34,7 @@ int main()
         file_object.close();
 
         for (auto dataPair : scoreboard){
-            cout << dataPair.first << ":" << dataPair.second << endl;
+            cout << dataPair.first << ": " << dataPair.second << endl;
         }
     }
     return EXIT_SUCCESS;
