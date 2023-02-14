@@ -16,11 +16,11 @@ int main()
 
     ofstream output;
     ifstream file_object(input_file);
-    output.open (output_file);
     if( not file_object ){
         cout << "Error! The file " << input_file << " cannot be opened." << endl;
         return EXIT_FAILURE;
     } else {
+        output.open (output_file);
         int row_number = 1;
         string line;
         while( getline(file_object, line) ){
