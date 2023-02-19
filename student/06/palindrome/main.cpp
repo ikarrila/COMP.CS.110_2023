@@ -9,9 +9,15 @@ bool palindrome_recursive(std::string s)
   RECURSIVE_FUNC
   // Do not remove RECURSIVE_FUNC declaration, it's necessary for automatic testing to work
   // ------------
-
-
-  // Add your implementation here
+    std::string::iterator firstChar = s.begin();
+    std::string::iterator lastChar = s.end();
+    if (lastChar - firstChar <= 1){
+        return true;
+    }
+    if (*firstChar++ != *--lastChar){
+        return false;
+    }
+    return palindrome_recursive( std::string ( firstChar, lastChar ));
 }
 
 // Do not modify rest of the code, or the automated testing won't work.
