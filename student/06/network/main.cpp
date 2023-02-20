@@ -33,9 +33,15 @@ std::vector<std::string> split(const std::string& s,
     return result;
 }
 
+void printNames(const std::map<std::string, std::vector<std::string>>& names, const std::string& id, unsigned depth = 0) {
+    std::cout << std::string(depth * 2, '.') << id << std::endl;
+    for (const auto& underling : names.at(id)) {
+        printNames(names, underling, depth + 1);
+    }
+}
+
 int main()
 {
-    // TODO: Implement the datastructure here
     std::map<std::string, std::vector<std::string>> names;
 
     while(true)
@@ -63,7 +69,6 @@ int main()
             std::string id1 = parts.at(1);
             std::string id2 = parts.at(2);
 
-            // TODO: Implement the command here!
             if (names.find(id1) == names.end()) {
                 names[id1] = {};
             }
@@ -82,17 +87,7 @@ int main()
             std::string id = parts.at(1);
 
             std::map<std::string, std::vector<std::string>>::iterator i;
-            // TODO: Implement the command here!
-            for(i = names.begin(); i != names.end(); i++){
-                std::cout << i->first << std::endl;
-                std::vector under = i->second;
-                for(int j = 0; j < under.size(); j++){
-                    for(int k = 0; k < under.size(); k++){
-                        std::cout << "..";
-                    }
-                    std::cout << under[j] << std::endl;
-                }
-            }
+            printNames(names, id);
         }
         else if(command == "C" or command == "c")
         {
