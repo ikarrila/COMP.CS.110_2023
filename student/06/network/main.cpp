@@ -40,6 +40,23 @@ void printNames(const std::map<std::string, std::vector<std::string>>& names, co
     }
 }
 
+unsigned depth(const std::map<std::string, std::vector<std::string>>& names, const std::string& id) {
+    unsigned deepestPoint = 0;
+    for ( const auto& under : names.at(id)) {
+        deepestPoint = std::max(deepestPoint, depth(names, under));
+    }
+    return 1 + deepestPoint;
+}
+
+unsigned count(const std::map<std::string, std::vector<std::string>>& names, const std::string& id) {
+    const auto& under = names.at(id);
+    unsigned underlings_count = under.size();
+    for (const auto& underling : under) {
+        underlings_count += count(names, underling);
+    }
+    return underlings_count;
+}
+
 int main()
 {
     std::map<std::string, std::vector<std::string>> names;
@@ -97,9 +114,7 @@ int main()
                 continue;
             }
             std::string id = parts.at(1);
-
-            // TODO: Implement the command here!
-
+            std::cout << count(names, id) << std::endl;
         }
         else if(command == "D" or command == "d")
         {
@@ -109,9 +124,7 @@ int main()
                 continue;
             }
             std::string id = parts.at(1);
-
-            // TODO: Implement the command here!
-
+            std::cout << depth(names, id) << std::endl;
         }
         else if(command == "Q" or command == "q")
         {
