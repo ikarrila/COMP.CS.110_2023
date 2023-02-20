@@ -2,6 +2,9 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <map>
+#include <algorithm>
+#include <cassert>
 
 const std::string HELP_TEXT = "S = store id1 i2\nP = print id\n"
                               "C = count id\nD = depth id\n";
@@ -33,7 +36,7 @@ std::vector<std::string> split(const std::string& s,
 int main()
 {
     // TODO: Implement the datastructure here
-
+    std::map<std::string, std::vector<std::string>> names;
 
     while(true)
     {
@@ -61,6 +64,12 @@ int main()
             std::string id2 = parts.at(2);
 
             // TODO: Implement the command here!
+            if (names.find(id1) == names.end()) {
+                names[id1] = {};
+            }
+            names.at(id1).push_back(id2);
+            assert(names.count(id2) == 0);
+            names[id2] = {};
 
         }
         else if(command == "P" or command == "p")
@@ -72,8 +81,18 @@ int main()
             }
             std::string id = parts.at(1);
 
+            std::map<std::string, std::vector<std::string>>::iterator i;
             // TODO: Implement the command here!
-
+            for(i = names.begin(); i != names.end(); i++){
+                std::cout << i->first << std::endl;
+                std::vector under = i->second;
+                for(int j = 0; j < under.size(); j++){
+                    for(int k = 0; k < under.size(); k++){
+                        std::cout << "..";
+                    }
+                    std::cout << under[j] << std::endl;
+                }
+            }
         }
         else if(command == "C" or command == "c")
         {
