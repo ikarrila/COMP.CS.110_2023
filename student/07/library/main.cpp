@@ -38,12 +38,46 @@ struct Book {
     std::string status;
 };
 
-std::map<std::string, Book> books;
-
 using namespace std;
 
-int main()
-{
-    cout << "Hello World!" << endl;
-    return 0;
+int main(){
+    std::map<std::string, Book> books;
+    std::string input_file = "";
+
+    std::cout << "Input file: ";
+    getline(cin, input_file);
+
+    ifstream file_object(input_file);
+    if( not file_object ){
+        std::cout << "Error: input file cannot be opened" << std::endl;
+        return EXIT_FAILURE;
+    } else {
+        int row_number = 1;
+        std::string line = "";
+        while( getline(file_object, line) ){
+            std::istringstream ss(line);
+            string library = "";
+            string title = "";
+            string author = "";
+            string status = "";
+
+            getline(ss, library, ';');
+            getline(ss, title, ';');
+            getline(ss, author, ';');
+            getline(ss, status, ';');
+
+            if (library.empty() or title.empty() or author.empty() or status.empty()){
+                std::cout << "Error: empty field" << std::endl;
+                return EXIT_FAILURE;
+            }
+
+            books[library] = {author, title, status};
+
+            std::cout << books[library].title << std::endl;
+
+            row_number += 1;
+        }
+        file_object.close();
+    }
+    return EXIT_SUCCESS;
 }
