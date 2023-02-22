@@ -31,17 +31,33 @@
 #include <string>
 #include <map>
 #include <sstream>
+#include <algorithm>
+#include <vector>
 
 struct Book {
-    std::string title;
     std::string author;
-    std::string status;
+    std::string title;
+    int reservations;
 };
 
 using namespace std;
 
+void material(const std::string& library, std::map<std::string, std::vector<Book>>& books) {
+    if (books.find(library) == books.end()){
+        std::cout << "Error: unknown library" << std::endl;
+    } else {
+        std::vector<Book>& library_books = books[library];
+        std::sort(library_books.begin(), library_books.end(), [](const Book& a, const Book& b) {
+            return a.author < b.author;
+        });
+        for (const auto& book : library_books) {
+            std::cout << book.author << ": " << book.title << std::endl;
+        }
+    }
+}
+
 int main(){
-    std::map<std::string, Book> books;
+    std::map<std::string, std::vector<Book>> books;
     std::string input_file = "";
 
     std::cout << "Input file: ";
@@ -52,18 +68,18 @@ int main(){
         std::cout << "Error: input file cannot be opened" << std::endl;
         return EXIT_FAILURE;
     } else {
-        int row_number = 1;
         std::string line = "";
-        while( getline(file_object, line) ){
+        while(getline(file_object, line)){
             std::istringstream ss(line);
             string library = "";
-            string title = "";
             string author = "";
+            string title = "";
             string status = "";
+            int reservations = 0;
 
             getline(ss, library, ';');
-            getline(ss, title, ';');
             getline(ss, author, ';');
+            getline(ss, title, ';');
             getline(ss, status, ';');
 
             if (library.empty() or title.empty() or author.empty() or status.empty()){
@@ -71,13 +87,47 @@ int main(){
                 return EXIT_FAILURE;
             }
 
-            books[library] = {author, title, status};
-
-            std::cout << books[library].title << std::endl;
-
-            row_number += 1;
+            if (status != "on-the-shelf"){
+                reservations = stoi(status);
+            }
+            Book book;
+            book.author = author;
+            book.title = title;
+            book.reservations = reservations;
+            books[library].push_back(book);
         }
         file_object.close();
+
+        std::string input = "";
+        while(input != "quit"){
+            cout << "lib> ";
+            getline(cin, input);
+
+            std::string command = input.substr(0, input.find(" "));
+            std::string target_library = "";
+
+            if (command == "libraries"){
+                for (auto element : books){
+                    std::cout << element.first << std::endl;
+                }
+            } else if (command == "material"){
+                target_library = input.substr(input.find(" ") + 1);
+
+                if (target_library.empty()){
+                    std::cout << "Error: wrong number of parameters" << std::endl;
+                } else {
+                    material(target_library, books);
+                }
+            } else if (command == "books"){
+
+            } else if (command == "reservable"){
+
+            } else if (command == "loanable"){
+
+            } else {
+                std::cout << "Error: unknown command" << std::endl;
+            }
+        }
     }
     return EXIT_SUCCESS;
 }
