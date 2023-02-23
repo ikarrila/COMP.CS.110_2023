@@ -33,6 +33,7 @@
 #include <sstream>
 #include <algorithm>
 #include <vector>
+#include <set>
 
 struct Book {
     std::string author;
@@ -55,6 +56,110 @@ void material(const std::string& library, std::map<std::string, std::vector<Book
         }
     }
 }
+
+void printBooks(const std::string& library, const std::string& author, std::map<std::string, std::vector<Book>>& books){
+    if (books.find(library) == books.end()){
+        std::cout << "Error: unknown library" << std::endl;
+    } else {
+        std::vector<Book>& library_books = books[library];
+        std::sort(library_books.begin(), library_books.end(), [](const Book& a, const Book& b) {
+            return a.title < b.title;
+        });
+        for (const auto& book : library_books) {
+            if (book.author == author){
+                if (book.reservations == 0){
+                    std::cout << book.title << " --- on the shelf" << std::endl;
+                } else {
+                    std::cout << book.title << " --- " << book.reservations << " reservations" << std::endl;
+                }
+            }
+        }
+    }
+}
+
+void reservable(const std::string& author, const std::string& book_title, std::map<std::string, std::vector<Book>>& books) {
+    bool found_book = false;
+    std::map<int, std::vector<std::string>> queues; // reservation queues indexed by length
+
+    std::map<std::string, std::map<std::string, Book>> searchList;
+
+    // Loop through each library in the books map
+    for (auto& library : books) {
+        // Initialize a new map for the current library in the libraries map
+        std::map<std::string, Book> booksInLibrary;
+        // Loop through each book in the current library in the books map
+        for (auto& book : library.second) {
+            // Add the book to the booksInLibrary map with the book's name as the key
+            booksInLibrary[book.title] = book;
+        }
+        // Add the booksInLibrary map to the libraries map with the library's name as the key
+        searchList[library.first] = booksInLibrary;
+    }
+
+
+    // Search for the book in the libraries
+    for (auto& [library_name, books] : searchList) {
+        for (auto& [title, book] : books) {
+            if (book.author == author && title == book_title) {
+                found_book = true;
+
+                if (book.reservations >= 100) {
+                    std::cout << "Book is not reservable from any library" << std::endl;
+                    return;
+                }
+
+                if (book.reservations == 0) {
+                    std::cout << "on the shelf" << std::endl;
+                    std::cout << "--- " << library_name << std::endl;
+                    return;
+                }
+
+                queues[book.reservations].push_back(library_name);
+            }
+        }
+    }
+
+    if (!found_book) {
+        std::cout << "Book is not a library book" << std::endl;
+        return;
+    }
+
+    // Find the shortest reservation queue
+    if (!queues.empty()) {
+        auto shortest_queue = queues.begin()->second;
+        std::cout << shortest_queue.size() << " reservations" << std::endl;
+        for (auto& library_name : shortest_queue) {
+            std::cout << "--- " << library_name << std::endl;
+        }
+    } else {
+        std::cout << "Error: no reservation queues found" << std::endl;
+    }
+}
+
+void loanable(std::map<std::string, std::vector<Book>>& books) {
+    std::set<std::string> seen_books; // To keep track of already seen books
+    std::vector<std::string> loanable_books;
+
+    // Loop through each library in the books map
+    for (auto& library : books) {
+        // Loop through each book in the current library in the books map
+        for (auto& book : library.second) {
+            if (book.reservations == 0 && seen_books.find(book.author + " " + book.title) == seen_books.end()) {
+                seen_books.insert(book.author + " " + book.title);
+                loanable_books.push_back(book.author + ": " + book.title);
+            }
+        }
+    }
+
+    // Sort the loanable books in alphabetical order based on author and title
+    std::sort(loanable_books.begin(), loanable_books.end());
+
+    // Print the loanable books
+    for (auto& book : loanable_books) {
+        std::cout << book << std::endl;
+    }
+}
+
 
 int main(){
     std::map<std::string, std::vector<Book>> books;
@@ -105,6 +210,8 @@ int main(){
 
             std::string command = input.substr(0, input.find(" "));
             std::string target_library = "";
+            std::string target_author = "";
+            std::string target_title = "";
 
             if (command == "libraries"){
                 for (auto element : books){
@@ -119,11 +226,28 @@ int main(){
                     material(target_library, books);
                 }
             } else if (command == "books"){
+                target_library = input.substr(input.find(" ") + 1,(input.find_last_of(" "))-(input.find(" ")+1));
+                target_author = input.substr(input.find_last_of(" ") + 1);
 
+                std::cout << target_library << endl;
+                std::cout << target_author << endl;
+
+                if (target_library.empty() or target_author.empty()){
+                    std::cout << "Error: wrong number of parameters" << std::endl;
+                } else {
+                    printBooks(target_library, target_author, books);
+                }
             } else if (command == "reservable"){
+                target_author = input.substr(input.find(" ") + 1,(input.find_last_of(" "))-(input.find(" ")+1));
+                target_title = input.substr(input.find_last_of(" ") + 1);
+
+                std::cout << target_library << endl;
+                std::cout << target_author << endl;
+
+                reservable(target_author, target_title, books);
 
             } else if (command == "loanable"){
-
+                loanable(books);
             } else {
                 std::cout << "Error: unknown command" << std::endl;
             }
