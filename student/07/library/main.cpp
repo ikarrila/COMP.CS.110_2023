@@ -261,6 +261,8 @@ int main(){
 
             } else if (command == "loanable"){
                 loanable(books);
+            } else if (command == "quit"){
+                continue;
             } else {
                 std::cout << "Error: unknown command" << std::endl;
             }
