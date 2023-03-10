@@ -65,8 +65,10 @@ void printBooks(const std::string& library, const std::string& author, std::map<
         std::sort(library_books.begin(), library_books.end(), [](const Book& a, const Book& b) {
             return a.title < b.title;
         });
+        bool author_exist = false;
         for (const auto& book : library_books) {
             if (book.author == author){
+                author_exist = true;
                 if (book.reservations == 0){
                     std::cout << book.title << " --- on the shelf" << std::endl;
                 } else {
@@ -74,11 +76,15 @@ void printBooks(const std::string& library, const std::string& author, std::map<
                 }
             }
         }
+        if (!author_exist){
+            std::cout << "Error: unknown author" << std::endl;
+        }
     }
 }
 
 void reservable(const std::string& author, const std::string& book_title, std::map<std::string, std::vector<Book>>& books) {
     bool found_book = false;
+    int min_reservations = 100;
     std::map<int, std::vector<std::string>> queues; // reservation queues indexed by length
 
     std::map<std::string, std::map<std::string, Book>> searchList;
@@ -113,7 +119,9 @@ void reservable(const std::string& author, const std::string& book_title, std::m
                     std::cout << "--- " << library_name << std::endl;
                     return;
                 }
-
+                if (book.reservations < min_reservations){
+                    min_reservations = book.reservations;
+                }
                 queues[book.reservations].push_back(library_name);
             }
         }
@@ -127,7 +135,7 @@ void reservable(const std::string& author, const std::string& book_title, std::m
     // Find the shortest reservation queue
     if (!queues.empty()) {
         auto shortest_queue = queues.begin()->second;
-        std::cout << shortest_queue.size() << " reservations" << std::endl;
+        std::cout << min_reservations << " reservations" << std::endl;
         for (auto& library_name : shortest_queue) {
             std::cout << "--- " << library_name << std::endl;
         }
@@ -226,11 +234,11 @@ int main(){
                     material(target_library, books);
                 }
             } else if (command == "books"){
-                target_library = input.substr(input.find(" ") + 1,(input.find_last_of(" "))-(input.find(" ")+1));
-                target_author = input.substr(input.find_last_of(" ") + 1);
-
-                std::cout << target_library << endl;
-                std::cout << target_author << endl;
+                std::istringstream ss(input);
+                string com = "";
+                getline(ss, com, ' ');
+                getline(ss, target_library, ' ');
+                getline(ss, target_author, '\n');
 
                 if (target_library.empty() or target_author.empty()){
                     std::cout << "Error: wrong number of parameters" << std::endl;
@@ -238,11 +246,16 @@ int main(){
                     printBooks(target_library, target_author, books);
                 }
             } else if (command == "reservable"){
-                target_author = input.substr(input.find(" ") + 1,(input.find_last_of(" "))-(input.find(" ")+1));
-                target_title = input.substr(input.find_last_of(" ") + 1);
 
-                std::cout << target_library << endl;
-                std::cout << target_author << endl;
+                std::istringstream ss(input);
+                string com = "";
+                getline(ss, com, ' ');
+                getline(ss, target_author, ' ');
+                getline(ss, target_title, '\n');
+
+                target_title.erase(
+                    std::remove(target_title.begin(), target_title.end(), '\"'),
+                    target_title.end());
 
                 reservable(target_author, target_title, books);
 
