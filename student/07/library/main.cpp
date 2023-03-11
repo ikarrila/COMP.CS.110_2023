@@ -43,6 +43,8 @@ struct Book {
 
 using namespace std;
 
+//Prints every book and author stored in a library that is given as a parameter
+//PARAMETERS: Library to search for, data structure to search from.
 void material(const std::string& library, std::map<std::string, std::vector<Book>>& books) {
     if (books.find(library) == books.end()){
         std::cout << "Error: unknown library" << std::endl;
@@ -57,7 +59,11 @@ void material(const std::string& library, std::map<std::string, std::vector<Book
     }
 }
 
-void printBooks(const std::string& library, const std::string& author, std::map<std::string, std::vector<Book>>& books){
+//Prints all books in a certain library by a certain author. Also prints the amount
+//of reservations, or "on the shelf" if there are none.
+//PARAMETERS: Library and author to search for, data structure to search from.
+void printBooks(const std::string& library, const std::string& author,
+                std::map<std::string, std::vector<Book>>& books){
     if (books.find(library) == books.end()){
         std::cout << "Error: unknown library" << std::endl;
     } else {
@@ -72,7 +78,8 @@ void printBooks(const std::string& library, const std::string& author, std::map<
                 if (book.reservations == 0){
                     std::cout << book.title << " --- on the shelf" << std::endl;
                 } else {
-                    std::cout << book.title << " --- " << book.reservations << " reservations" << std::endl;
+                    std::cout << book.title << " --- " << book.reservations << " reservations"
+                    << std::endl;
                 }
             }
         }
@@ -82,14 +89,17 @@ void printBooks(const std::string& library, const std::string& author, std::map<
     }
 }
 
-void reservable(const std::string& author, const std::string& book_title, std::map<std::string, std::vector<Book>>& books) {
+//Prints the shortest reservation queue of a certain book. Shows "one the shelf" if available,
+//or tells if the book is not within any library. Shows all available libraries
+//PARAMETERS: Author of the book, title, and a data structure to search from.
+void reservable(const std::string& author, const std::string& book_title, std::map<std::string,
+                std::vector<Book>>& books) {
     bool found_book = false;
     int min_reservations = 100;
     std::map<int, std::vector<std::string>> queues; // reservation queues indexed by length
-
     std::map<std::string, std::map<std::string, Book>> searchList;
 
-    // Loop through each library in the books map
+    // Loop through each library in the books map to add them into a more searchable data structure
     for (auto& library : books) {
         // Initialize a new map for the current library in the libraries map
         std::map<std::string, Book> booksInLibrary;
@@ -101,19 +111,15 @@ void reservable(const std::string& author, const std::string& book_title, std::m
         // Add the booksInLibrary map to the libraries map with the library's name as the key
         searchList[library.first] = booksInLibrary;
     }
-
-
-    // Search for the book in the libraries
+    // Search for the right book from the libraries
     for (auto& [library_name, books] : searchList) {
         for (auto& [title, book] : books) {
             if (book.author == author && title == book_title) {
                 found_book = true;
-
                 if (book.reservations >= 100) {
                     std::cout << "Book is not reservable from any library" << std::endl;
                     return;
                 }
-
                 if (book.reservations == 0) {
                     std::cout << "on the shelf" << std::endl;
                     std::cout << "--- " << library_name << std::endl;
@@ -126,13 +132,11 @@ void reservable(const std::string& author, const std::string& book_title, std::m
             }
         }
     }
-
     if (!found_book) {
         std::cout << "Book is not a library book" << std::endl;
         return;
     }
-
-    // Find the shortest reservation queue
+    // Print the lowest reservation queue and available libraries
     if (!queues.empty()) {
         auto shortest_queue = queues.begin()->second;
         std::cout << min_reservations << " reservations" << std::endl;
@@ -144,6 +148,8 @@ void reservable(const std::string& author, const std::string& book_title, std::m
     }
 }
 
+//Prints all loanable books from a data structure in an alphabetical order.
+//PARAMETERS: A data structure to search from.
 void loanable(std::map<std::string, std::vector<Book>>& books) {
     std::set<std::string> seen_books; // To keep track of already seen books
     std::vector<std::string> loanable_books;
@@ -168,18 +174,22 @@ void loanable(std::map<std::string, std::vector<Book>>& books) {
     }
 }
 
-
-int main(){
-    std::map<std::string, std::vector<Book>> books;
+//A function to retrieve input data from a file and save it into a data structure
+//for later usage. Ask for input file name and print Error messages if failure occurs.
+//Otherwise reads the file line-by-line and inputs all data into it.
+//PARAM: A data structure to save the input data into
+//RETURNS: False if file can't be read or true if successful
+bool readInput(std::map<std::string, std::vector<Book>>& books){
     std::string input_file = "";
 
     std::cout << "Input file: ";
     getline(cin, input_file);
 
     ifstream file_object(input_file);
+    //File must be able to open, otherwise quit with EXIT_FAILURE
     if( not file_object ){
         std::cout << "Error: input file cannot be opened" << std::endl;
-        return EXIT_FAILURE;
+        return false;
     } else {
         std::string line = "";
         while(getline(file_object, line)){
@@ -195,9 +205,10 @@ int main(){
             getline(ss, title, ';');
             getline(ss, status, ';');
 
+            //Any empty field in the input data results in EXIT_FAILURE
             if (library.empty() or title.empty() or author.empty() or status.empty()){
                 std::cout << "Error: empty field" << std::endl;
-                return EXIT_FAILURE;
+                return false;
             }
 
             if (status != "on-the-shelf"){
@@ -210,19 +221,35 @@ int main(){
             books[library].push_back(book);
         }
         file_object.close();
+        return true;
+    }
+}
 
+int main(){
+    //Main data structure to store and manage the data from the input file
+    std::map<std::string, std::vector<Book>> books;
+    std::string input_file = "";
+
+    if(!readInput(books)){
+        return EXIT_FAILURE;
+    }
         std::string input = "";
         while(input != "quit"){
             cout << "lib> ";
             getline(cin, input);
 
+            //Stringstream to handle the input, and a string for each search param.
+            std::istringstream ss(input);
             std::string command = input.substr(0, input.find(" "));
+            std::string buffer = ""; //buffer is there to skip the first word (command) when necessary
             std::string target_library = "";
             std::string target_author = "";
             std::string target_title = "";
 
+            //Command is selected using if-else -statements. This could be done in a more civilized manner,
+            //but there are only 6 commands, which makes the method tolerable for now.
             if (command == "libraries"){
-                for (auto element : books){
+                for (auto& element : books){
                     std::cout << element.first << std::endl;
                 }
             } else if (command == "material"){
@@ -234,9 +261,7 @@ int main(){
                     material(target_library, books);
                 }
             } else if (command == "books"){
-                std::istringstream ss(input);
-                string com = "";
-                getline(ss, com, ' ');
+                getline(ss, buffer, ' ');
                 getline(ss, target_library, ' ');
                 getline(ss, target_author, '\n');
 
@@ -246,13 +271,11 @@ int main(){
                     printBooks(target_library, target_author, books);
                 }
             } else if (command == "reservable"){
-
-                std::istringstream ss(input);
-                string com = "";
-                getline(ss, com, ' ');
+                getline(ss, buffer, ' ');
                 getline(ss, target_author, ' ');
                 getline(ss, target_title, '\n');
 
+                //Removing '"' from the book title before calling the print function
                 target_title.erase(
                     std::remove(target_title.begin(), target_title.end(), '\"'),
                     target_title.end());
@@ -261,12 +284,12 @@ int main(){
 
             } else if (command == "loanable"){
                 loanable(books);
+            //Quit command skips printing the error and proceeds to exit
             } else if (command == "quit"){
                 continue;
             } else {
                 std::cout << "Error: unknown command" << std::endl;
             }
         }
-    }
     return EXIT_SUCCESS;
 }
