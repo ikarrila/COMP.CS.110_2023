@@ -45,12 +45,14 @@ using namespace std;
 
 //Prints every book and author stored in a library that is given as a parameter
 //PARAMETERS: Library to search for, data structure to search from.
-void material(const std::string& library, std::map<std::string, std::vector<Book>>& books) {
+void material(const std::string& library, std::map<std::string,
+              std::vector<Book>>& books) {
     if (books.find(library) == books.end()){
         std::cout << "Error: unknown library" << std::endl;
     } else {
         std::vector<Book>& library_books = books[library];
-        std::sort(library_books.begin(), library_books.end(), [](const Book& a, const Book& b) {
+        std::sort(library_books.begin(), library_books.end(),
+                  [](const Book& a, const Book& b) {
             return a.author < b.author;
         });
         for (const auto& book : library_books) {
@@ -68,7 +70,8 @@ void printBooks(const std::string& library, const std::string& author,
         std::cout << "Error: unknown library" << std::endl;
     } else {
         std::vector<Book>& library_books = books[library];
-        std::sort(library_books.begin(), library_books.end(), [](const Book& a, const Book& b) {
+        std::sort(library_books.begin(), library_books.end(), [](const Book& a,
+                  const Book& b) {
             return a.title < b.title;
         });
         bool author_exist = false;
@@ -78,8 +81,8 @@ void printBooks(const std::string& library, const std::string& author,
                 if (book.reservations == 0){
                     std::cout << book.title << " --- on the shelf" << std::endl;
                 } else {
-                    std::cout << book.title << " --- " << book.reservations << " reservations"
-                    << std::endl;
+                    std::cout << book.title << " --- " << book.reservations
+                              << " reservations" << std::endl;
                 }
             }
         }
@@ -92,14 +95,15 @@ void printBooks(const std::string& library, const std::string& author,
 //Prints the shortest reservation queue of a certain book. Shows "one the shelf" if available,
 //or tells if the book is not within any library. Shows all available libraries
 //PARAMETERS: Author of the book, title, and a data structure to search from.
-void reservable(const std::string& author, const std::string& book_title, std::map<std::string,
-                std::vector<Book>>& books) {
+void reservable(const std::string& author, const std::string& book_title,
+                std::map<std::string, std::vector<Book>>& books) {
     bool found_book = false;
     int min_reservations = 100;
     std::map<int, std::vector<std::string>> queues; // reservation queues indexed by length
     std::map<std::string, std::map<std::string, Book>> searchList;
 
-    // Loop through each library in the books map to add them into a more searchable data structure
+    // Loop through each library in the books map to add them into a more
+    //searchable data structure
     for (auto& library : books) {
         // Initialize a new map for the current library in the libraries map
         std::map<std::string, Book> booksInLibrary;
@@ -108,7 +112,7 @@ void reservable(const std::string& author, const std::string& book_title, std::m
             // Add the book to the booksInLibrary map with the book's name as the key
             booksInLibrary[book.title] = book;
         }
-        // Add the booksInLibrary map to the libraries map with the library's name as the key
+        // Add the booksInLibrary map to the libraries map with the library's name as key
         searchList[library.first] = booksInLibrary;
     }
     // Search for the right book from the libraries
@@ -158,7 +162,8 @@ void loanable(std::map<std::string, std::vector<Book>>& books) {
     for (auto& library : books) {
         // Loop through each book in the current library in the books map
         for (auto& book : library.second) {
-            if (book.reservations == 0 && seen_books.find(book.author + " " + book.title) == seen_books.end()) {
+            if (book.reservations == 0 && seen_books.find(book.author + " " + book.title)
+                    == seen_books.end()) {
                 seen_books.insert(book.author + " " + book.title);
                 loanable_books.push_back(book.author + ": " + book.title);
             }
@@ -241,13 +246,14 @@ int main(){
             //Stringstream to handle the input, and a string for each search param.
             std::istringstream ss(input);
             std::string command = input.substr(0, input.find(" "));
-            std::string buffer = ""; //buffer is there to skip the first word (command) when necessary
+            std::string buffer = ""; //buffer is to skip the 1st word (command)
             std::string target_library = "";
             std::string target_author = "";
             std::string target_title = "";
 
-            //Command is selected using if-else -statements. This could be done in a more civilized manner,
-            //but there are only 6 commands, which makes the method tolerable for now.
+            //Command is selected using if-else -statements.
+            //This could be done in a more civilized manner, but there are only 6
+            //commands, which makes the method tolerable for now.
             if (command == "libraries"){
                 for (auto& element : books){
                     std::cout << element.first << std::endl;
