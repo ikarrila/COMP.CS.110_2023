@@ -105,7 +105,6 @@ void change_data(Student& s,
 
         if (is_valid_phone_number(phone_number))
         {
-            std::cout << "Valid number" << std::endl;
             s.set_phone_number(phone_number);
 
             //fix this
@@ -188,6 +187,8 @@ int main() {
                 std::string student_number = parts.at(1);
                 for(auto pair: student_numbers) {
                     change_data(*(student_numbers[student_number]), student_number, file_name, student_numbers, user_ids);
+                    std::cout << std::endl;
+                    break;
                 }
             }
 
