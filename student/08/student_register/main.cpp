@@ -84,9 +84,10 @@ bool is_valid_phone_number(const std::string number) {
         if(!(('0' <= number[i] and number[i] <= '9')
              or number[i] == ' '
              or number[i] == '-')) {
+            std::cout << std::endl;
             std::cout << "Erroneous phone number: "
                       << number
-                      << std::endl << std::endl;
+                      << std::endl;
             return false;
         }
     }
@@ -113,7 +114,7 @@ void change_data(Student& s,
 
             // Update the file
             std::ofstream file_object(file_name);
-            for(auto pair: student_numbers) {
+            for(auto pair: user_ids) {
                 Student& student = *(pair.second);
                 file_object << student.student_number << ";"
                             << student.user_id << ";"
