@@ -17,12 +17,9 @@ Card_data* Cards::get_topmost(){
 // Adds a new card with the given id as the topmost element.
 void Cards::add(int id){
     Card_data* new_item = new Card_data{id, nullptr};
-
-    if ( top_ == nullptr ) {
-       top_ = new_item;
-    } else {
-       top_->next = new_item;
-    }
+    new_item->data = id;
+    new_item->next = top_;
+    top_ = new_item;
 }
 
 // Prints the content of the data structure with ordinal numbers to the
@@ -42,39 +39,56 @@ void Cards::print_from_top_to_bottom(std::ostream& s){
 bool Cards::remove(int& id){
     if ( top_ == nullptr ) {
        return false;
-    }
-
-    Card_data* item_to_be_removed = top_;
-
-    //removed_task = item_to_be_removed->next;
-
-    if ( top_->next == nullptr ) {
-       top_ = nullptr;
     } else {
-       top_ = top_->next;
+        Card_data* item_to_be_removed = top_;
+        id = item_to_be_removed->data;
+        top_ = top_->next;
+        delete item_to_be_removed;
+        return true;
     }
-
-    delete item_to_be_removed;
-
-    return true;
 }
 
 
 // Moves the last element of the data structure as the first one.
 // Returns false, if the data structure is empty, otherwise returns true.
 bool Cards::bottom_to_top(){
-    return true;
+    if (top_ == nullptr){
+        return false;
+    } else {
+        Card_data* current = top_;
+        while (current->next->next != nullptr) {
+          current = current->next;
+        }
+        Card_data* last_card = current->next;
+        current->next = nullptr;
+        last_card->next = top_;
+        top_ = last_card;
+        return true;
+      }
 }
 
 // Moves the first element of the data structure as the last one.
 // Returns false, if the data structure is empty, otherwise returns true.
 bool Cards::top_to_bottom(){
-    return true;
+    if (top_ == nullptr || top_->next == nullptr) {
+      return false;
+    } else {
+      Card_data* current = top_;
+      while (current->next != nullptr) {
+        current = current->next;
+      }
+      current->next = top_;
+      top_ = top_->next;
+      current->next->next = nullptr;
+      return true;
+    }
 }
 
 // Prints the content of the data structure with ordinal numbers to the
 // output stream given as a parameter starting from the last element.
 void Cards::print_from_bottom_to_top(std::ostream& s){
+    int index = recursive_print(top_, s);
+    s << "Total cards: " << index << std::endl;
 }
 
 Cards::~Cards(){
