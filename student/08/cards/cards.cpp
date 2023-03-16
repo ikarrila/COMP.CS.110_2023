@@ -91,6 +91,17 @@ void Cards::print_from_bottom_to_top(std::ostream& s){
     s << "Total cards: " << index << std::endl;
 }
 
+// Prints everything recursively
+int Cards::recursive_print(Card_data* top, std::ostream& s) {
+  if (top == nullptr) {
+    return 0;
+  } else {
+    int index = recursive_print(top->next, s);
+    s << index << ": " << top->data << std::endl;
+    return index + 1;
+  }
+}
+
 Cards::~Cards(){
     Card_data* current = top_;
     while (current != nullptr){
