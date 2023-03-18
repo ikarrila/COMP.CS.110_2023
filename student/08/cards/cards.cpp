@@ -87,8 +87,7 @@ bool Cards::top_to_bottom(){
 // Prints the content of the data structure with ordinal numbers to the
 // output stream given as a parameter starting from the last element.
 void Cards::print_from_bottom_to_top(std::ostream& s){
-    int index = recursive_print(top_, s);
-    s << "Total cards: " << index << std::endl;
+    recursive_print(top_, s);
 }
 
 // Prints everything recursively
