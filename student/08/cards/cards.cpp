@@ -25,7 +25,7 @@ void Cards::add(int id){
 // Prints the content of the data structure with ordinal numbers to the
 // output stream given as a parameter starting from the first element.
 void Cards::print_from_top_to_bottom(std::ostream& s){
-    int i = 0;
+    int i = 1;
     Card_data* current = top_;
     while (current != nullptr){
         s << i << ": " << current->data << std::endl;
@@ -96,7 +96,7 @@ int Cards::recursive_print(Card_data* top, std::ostream& s) {
     return 0;
   } else {
     int index = recursive_print(top->next, s);
-    s << index << ": " << top->data << std::endl;
+    s << (index + 1) << ": " << top->data << std::endl;
     return index + 1;
   }
 }
