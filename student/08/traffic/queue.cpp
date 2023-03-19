@@ -35,7 +35,7 @@ void Queue::switch_light() {
     //IF RED
     if(is_green_ == false){
         if (first_ != nullptr){
-            std::cout << (is_green_ ? "GREEN: " : "RED: ") << "Vehicle(s) ";
+            std::cout << "GREEN: Vehicle(s) ";
             for (unsigned int i = 0; i < cycle_; ++i) {
                 if (first_) {
                     Vehicle* to_delete = first_;
