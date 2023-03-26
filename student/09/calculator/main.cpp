@@ -54,11 +54,15 @@ const vector<Command> COMMANDS = {
     {"DECREASE", 2, false, subtraction},
     {"MULTIPLY", 2, false, multiplication},
     {"DIVIDE", 2, false, division},
+    {"^", 2, false, power},
+    {"EXP", 2, false, power},
+    {"POWER", 2, false, power},
     {"STOP", 0, true, nullptr},
     {"QUIT", 0, true, nullptr},
     {"EXIT", 0, true, nullptr},
     {"Q", 0, true, nullptr}
 };
+
 
 
 int main() {
@@ -85,10 +89,56 @@ int main() {
             continue;
         }
 
-        string command_to_be_executed = pieces.at(0);
+        string& command_to_be_executed = pieces.at(0);
+        for (char& c : command_to_be_executed)
+        {
+            c = toupper(c);
+        }
 
         // TODO: Implement command execution here!
+        auto command = COMMANDS.begin();
+        for (
+             ; command != COMMANDS.end();
+             ++command)
+        {
+            if (command->str == command_to_be_executed)
+            {
+                break;
+            }
+        }
 
+        if (command == COMMANDS.end())
+        {
+            std::cout << "Error: unknown command.\n";
+            continue;
+        }
+
+        if (command->is_exit)
+        {
+            std::cout << GREETING_AT_END << "\n";
+            break;
+        }
+
+        if (pieces.size() - 1 != command->parameter_number)
+        {
+            std::cout << "Error: wrong number of parameters.\n";
+            continue;
+        }
+
+        const std::string& left_str = pieces.at(1);
+        const std::string& right_str = pieces.at(2);
+
+        double left = 0.0;
+        double right = 0.0;
+
+        if (!string_to_double(left_str, left)
+              || !string_to_double(right_str, right))
+        {
+            std::cout << "Error: a non-number operand.\n";
+            continue;
+        }
+
+        std::cout << command->action(left, right) << "\n";
     }
 }
 
