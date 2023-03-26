@@ -113,16 +113,16 @@ int main() {
             continue;
         }
 
-        if (command->is_exit)
-        {
-            std::cout << GREETING_AT_END << "\n";
-            break;
-        }
-
         if (pieces.size() - 1 != command->parameter_number)
         {
             std::cout << "Error: wrong number of parameters.\n";
             continue;
+        }
+
+        if (command->is_exit)
+        {
+            std::cout << GREETING_AT_END << "\n";
+            break;
         }
 
         const std::string& left_str = pieces.at(1);
