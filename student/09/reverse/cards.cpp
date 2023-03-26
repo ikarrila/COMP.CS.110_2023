@@ -42,6 +42,7 @@ void Cards::reverse()
     {
         return;
     }
+
     std::shared_ptr<Card_data> previous = nullptr;
     std::shared_ptr<Card_data> current = top_;
 
