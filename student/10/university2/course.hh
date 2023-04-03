@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-//const std::string STUDENT_ADDED = "A new student has been added.";
+const std::string STUDENT_ADDED = "Signed up on the course.";
 const std::string STAFF_ADDED = "A new staff member has been added.";
 const std::string STAFF_EXISTS = "Error: Staff member already added on this course.";
 const std::string STUDENT_EXISTS = "Error: Student already added on this course.";
@@ -65,6 +65,13 @@ public:
     void add_staff(Account* new_staff_member);
 
     /**
+     * @brief add student
+     * @param new_student
+     * Add a new student to course.
+     */
+    void add_student(Account* new_student);
+
+    /**
      * @brief get_code
      * @return the course code.
      */
@@ -81,6 +88,7 @@ private:
     std::string name_;
     int credits_;
     std::vector<Account*> course_staff_;
+    std::vector<Account*> course_students_;
 
     // Possibly (but not necessarily) you will need here an attibute
     // (e.g. vector) containing students signed up for the course

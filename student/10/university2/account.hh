@@ -11,7 +11,7 @@
 #define ACCOUNT_HH
 
 #include <string>
-//#include <vector>
+#include <vector>
 
 class Course;
 
@@ -61,12 +61,27 @@ public:
      */
     int get_account_number() const;
 
+    /**
+     * @brief sign_course
+     * @return successful signing or not
+     */
+    bool sign_course(Course* course);
+
+    /**
+     * @brief complete_course
+     * @return successful completion or not
+     */
+    bool complete_course(Course* course);
+
 private:
     std::string full_name_;
     std::string last_name_;
     std::string first_name_;
     std::string email_;
     const int account_number_;
+
+    std::vector<Course*> signed_courses_;
+    std::vector<Course*> completed_courses_;
 
     // Most probably you will need here an attribute (e.g. vector) containing 
     // courses the account has signed up for (either completed or uncompleted

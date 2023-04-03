@@ -125,7 +125,20 @@ void University::add_staff(Params params)
 
 void University::sign_up(Params params)
 {
+    std::string code = params.at(0);
+    int account = std::stoi(params.at(1));
+    if ( courses_.find(code) == courses_.end() )
+    {
+        std::cout << CANT_FIND << code << std::endl;
+        return;
+    }
+    if ( accounts_.find(account) == accounts_.end() )
+    {
+        std::cout << CANT_FIND << account << std::endl;
+        return;
+    }
 
+    courses_.at(code)->add_student(accounts_.at(account));
 }
 
 void University::complete(Params params)

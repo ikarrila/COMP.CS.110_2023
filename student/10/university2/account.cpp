@@ -53,3 +53,47 @@ int Account::get_account_number() const
 {
     return account_number_;
 }
+
+bool Account::sign_course(Course* course)
+{
+    // Check if account already has course in signed courses or completed courses
+    for (auto signed_course : signed_courses_) {
+        if (signed_course == course) {
+            std::cout << "Account already has this course in signed courses." << std::endl;
+            return false;
+        }
+    }
+    for (auto completed_course : completed_courses_) {
+        if (completed_course == course) {
+            std::cout << "Account already has this course in completed courses." << std::endl;
+            return false;
+        }
+    }
+
+    // Add course to signed courses and print success message
+    signed_courses_.push_back(course);
+    std::cout << "Course signed up successfully." << std::endl;
+    return true;
+}
+
+bool Account::complete_course(Course* course)
+{
+    // Check if account has course in signed courses
+    bool found = false;
+    for (auto it = signed_courses_.begin(); it != signed_courses_.end(); ++it) {
+        if (*it == course) {
+            signed_courses_.erase(it);
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        std::cout << "Account does not have this course in signed courses." << std::endl;
+        return false;
+    }
+
+    // Add course to completed courses and print success message
+    completed_courses_.push_back(course);
+    std::cout << "Course completed successfully." << std::endl;
+    return true;
+}
