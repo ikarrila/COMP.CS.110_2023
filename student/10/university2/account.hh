@@ -81,6 +81,14 @@ public:
     {
         return completed_courses_;
     }
+    /**
+     * @brief get_signed_courses
+     * @return vector with all signed courses
+     */
+    const std::vector<Course*>& get_signed_courses() const
+    {
+        return signed_courses_;
+    }
 
 private:
     std::string full_name_;

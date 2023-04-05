@@ -191,7 +191,18 @@ void University::print_completed(Params params)
 
 void University::print_study_state(Params params)
 {
-
+    int account = std::stoi(params.at(0));
+    if ( accounts_.find(account) == accounts_.end() )
+    {
+        std::cout << CANT_FIND << account << std::endl;
+        return;
+    }
+    std::cout << "Current:" << std::endl;
+    for (const auto& course : accounts_.at(account)->get_signed_courses()) {
+        course->print_info(true);
+    }
+    std::cout << "Completed:" << std::endl;
+    this->print_completed(params);
 }
 
 void University::graduate(Params params)
