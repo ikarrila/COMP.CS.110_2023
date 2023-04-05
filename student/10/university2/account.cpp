@@ -72,7 +72,7 @@ bool Account::sign_course(Course* course)
 
     // Add course to signed courses and print success message
     signed_courses_.push_back(course);
-    std::cout << "Course signed up successfully." << std::endl;
+    std::cout << SIGNED_UP << std::endl;
     return true;
 }
 
@@ -88,12 +88,12 @@ bool Account::complete_course(Course* course)
         }
     }
     if (!found) {
-        std::cout << "Account does not have this course in signed courses." << std::endl;
+        std::cout << NO_SIGNUPS << std::endl;
         return false;
     }
 
     // Add course to completed courses and print success message
     completed_courses_.push_back(course);
-    std::cout << "Course completed successfully." << std::endl;
+    std::cout << COMPLETED << std::endl;
     return true;
 }

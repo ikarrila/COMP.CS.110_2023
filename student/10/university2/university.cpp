@@ -143,7 +143,20 @@ void University::sign_up(Params params)
 
 void University::complete(Params params)
 {
+    std::string code = params.at(0);
+    int account = std::stoi(params.at(1));
+    if ( courses_.find(code) == courses_.end() )
+    {
+        std::cout << CANT_FIND << code << std::endl;
+        return;
+    }
+    if ( accounts_.find(account) == accounts_.end() )
+    {
+        std::cout << CANT_FIND << account << std::endl;
+        return;
+    }
 
+    accounts_.at(account)->complete_course(courses_.at(code));
 }
 
 void University::print_signups(Params params)
