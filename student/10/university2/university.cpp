@@ -161,7 +161,15 @@ void University::complete(Params params)
 
 void University::print_signups(Params params)
 {
-
+    std::string code = params.at(0);
+    if ( courses_.find(code) == courses_.end() )
+    {
+        std::cout << CANT_FIND << code << std::endl;
+        return;
+    }
+    for ( const auto& account : courses_.at(code)->get_course_students()){
+        account->print();
+    }
 }
 
 void University::print_completed(Params params)
@@ -175,7 +183,7 @@ void University::print_completed(Params params)
     int credits = 0;
     for (const auto& course : accounts_.at(account)->get_completed_courses()) {
         course->print_info(true);
-        credits += 5;
+        credits += course->get_credits();
     }
     std::cout << "Total credits: " << credits << std::endl;
 

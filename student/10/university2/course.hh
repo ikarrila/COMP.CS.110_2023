@@ -83,6 +83,15 @@ public:
      */
     int get_credits() const;
 
+    /**
+     * @brief get_course_students
+     * @return vector with all signed in students
+     */
+    const std::vector<Account*>& get_course_students() const
+    {
+        return course_students_;
+    }
+
 private:
     std::string course_code_;
     std::string name_;
