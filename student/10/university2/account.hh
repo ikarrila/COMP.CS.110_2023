@@ -73,6 +73,15 @@ public:
      */
     bool complete_course(Course* course);
 
+    /**
+     * @brief get_completed_courses
+     * @return vector with all completed courses
+     */
+    const std::vector<Course*>& get_completed_courses() const
+    {
+        return completed_courses_;
+    }
+
 private:
     std::string full_name_;
     std::string last_name_;

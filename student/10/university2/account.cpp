@@ -97,3 +97,4 @@ bool Account::complete_course(Course* course)
     std::cout << COMPLETED << std::endl;
     return true;
 }
+
