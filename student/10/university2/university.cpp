@@ -126,8 +126,12 @@ void University::add_staff(Params params)
 
 void University::sign_up(Params params)
 {
+    // Extracting parameters (course code and student id)
     std::string code = params.at(0);
     int account = std::stoi(params.at(1));
+
+    // Check if course and student exist, and student
+    //has not yet graduated.
     if ( courses_.find(code) == courses_.end() )
     {
         std::cout << CANT_FIND << code << std::endl;
@@ -138,12 +142,12 @@ void University::sign_up(Params params)
         std::cout << CANT_FIND << account << std::endl;
         return;
     }
-
     if ( accounts_.at(account)->get_graduation_status() )
     {
         std::cout << ALREADY_GRADUATED << std::endl;
         return;
     }
+    // Add the account to the course
     courses_.at(code)->add_student(accounts_.at(account));
 }
 
@@ -162,6 +166,7 @@ void University::complete(Params params)
         return;
     }
 
+    // Completing the course for the student
     accounts_.at(account)->complete_course(courses_.at(code));
 }
 
@@ -173,6 +178,7 @@ void University::print_signups(Params params)
         std::cout << CANT_FIND << code << std::endl;
         return;
     }
+    // Print the list of students who have signed up for the course
     for ( const auto& account : courses_.at(code)->get_course_students()){
         account->print();
     }
@@ -188,30 +194,13 @@ void University::print_completed(Params params)
     }
     int credits = 0;
     for (const auto& course : accounts_.at(account)->get_completed_courses()) {
-        std::shared_ptr<Course> c = std::make_shared<Course>(*course);
-        c->print_info(true);
-        credits += c->get_credits();
+        std::shared_ptr<Course> course_ptr = std::make_shared<Course>(*course);
+        course_ptr->print_info(true);
+        credits += course_ptr->get_credits();
     }
     std::cout << "Total credits: " << credits << std::endl;
 }
 
-/*
-void University::print_study_state(Params params)
-{
-    int account = std::stoi(params.at(0));
-    if ( accounts_.find(account) == accounts_.end() )
-    {
-        std::cout << CANT_FIND << account << std::endl;
-        return;
-    }
-    std::cout << "Current:" << std::endl;
-    for (const auto& course : accounts_.at(account)->get_signed_courses()) {
-        course->print_info(true);
-    }
-    std::cout << "Completed:" << std::endl;
-    this->print_completed(params);
-}*/
-
 void University::print_study_state(Params params)
 {
     int account = std::stoi(params.at(0));
@@ -226,10 +215,12 @@ void University::print_study_state(Params params)
     }
     std::cout << "Completed:" << std::endl;
 
-    // Use a shared_ptr to manage the lifetime of the courses
-    std::vector<std::shared_ptr<Course>> completed_courses = accounts_.at(account)->get_completed_courses();
+    // Create a shared_ptr to manage the lifetime of the course
+    std::vector<std::shared_ptr<Course>> completed_courses = accounts_.at(account)->
+            get_completed_courses();
 
     int credits = 0;
+    // Printing all completed courses and adding their credits together
     for (const auto& course : completed_courses) {
         course->print_info(true);
         credits += course->get_credits();
@@ -240,11 +231,14 @@ void University::print_study_state(Params params)
 
 void University::graduate(Params params)
 {
+    // Extract student ID and check if the account exists in the system
     int account = std::stoi(params.at(0));
     if ( accounts_.find(account) == accounts_.end() )
     {
         std::cout << CANT_FIND << account << std::endl;
         return;
     }
+    // Graduate method completes all courses and blocks further
+    //signups for the account
     accounts_.at(account)->graduate();
 }

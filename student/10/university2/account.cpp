@@ -59,7 +59,6 @@ bool Account::sign_course(Course* course)
 {
     if (graduated_ == true)
     {
-        std::cout << "Error: Student already graduated." << std::endl;
         return false;
     }
 
@@ -90,14 +89,10 @@ bool Account::complete_course(Course* course)
     std::cout << COMPLETED << std::endl;
     return true;
 }
-/*
-const std::vector<Course*>& Account::get_completed_courses() const
-{
-    return completed_courses_;
-}*/
 
 std::vector<std::shared_ptr<Course>> Account::get_completed_courses() const
 {
+    // Return a shared pointer with all completed courses
     std::vector<std::shared_ptr<Course>> courses;
     for (const auto& course : completed_courses_)
     {
@@ -106,10 +101,16 @@ std::vector<std::shared_ptr<Course>> Account::get_completed_courses() const
     return courses;
 }
 
-const std::vector<Course*>& Account::get_signed_courses() const
+std::vector<std::shared_ptr<Course>> Account::get_signed_courses() const
 {
-    return signed_courses_;
+    // Return a shared pointer with all signed courses
+    std::vector<std::shared_ptr<Course>> signed_courses_ptrs;
+    for (const auto& course : signed_courses_) {
+        signed_courses_ptrs.push_back(std::make_shared<Course>(*course));
+    }
+    return signed_courses_ptrs;
 }
+
 
 void Account::graduate()
 {

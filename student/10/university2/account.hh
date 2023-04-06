@@ -98,14 +98,13 @@ public:
      * @brief get_completed_courses
      * @return vector with all completed courses
      */
-    //const std::vector<Course*>& get_completed_courses() const;
     std::vector<std::shared_ptr<Course>> get_completed_courses() const;
 
     /**
      * @brief get_signed_courses
      * @return vector with all signed courses
      */
-    const std::vector<Course*>& get_signed_courses() const;
+    std::vector<std::shared_ptr<Course>> get_signed_courses() const;
 
     /**
      * @brief Graduates the account by changing courses from signed to completed
@@ -130,9 +129,6 @@ private:
     std::vector<Course*> completed_courses_;
     bool graduated_;
 
-    // Most probably you will need here an attribute (e.g. vector) containing 
-    // courses the account has signed up for (either completed or uncompleted
-    // or both)
 };
 
 #endif // ACCOUNT_HH

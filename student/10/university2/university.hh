@@ -6,7 +6,23 @@
  *
  * Note: Students shouldn't need to make changes to the existing functions
  * or their implementations.
+ *
+ * Desc:
+ *   This code represents a University class that manages courses and
+ * student accounts. It has functions for creating courses and student
+ * accounts, adding students and staff to courses, signing up, completing
+ * courses, and printing information about courses and accounts.
+ *   On each round, the program asks user to interact by using commands that
+ * are visible by inputting "help" or "h". This University class uses Account
+ * and Course classes in managing student data and responsing to user requests.
+ * The program terminates when the user gives a quitting command ('q' or 'Q').
+ *
+ * Name: Iivari Karrila
+ * Student number: K437292
+ * UserID: gdiika
+ * E-Mail: iivari.karrila@tuni.fi
  * */
+
 #ifndef UNIVERSITY_HH
 #define UNIVERSITY_HH
 
