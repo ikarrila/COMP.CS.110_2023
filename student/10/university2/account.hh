@@ -90,6 +90,13 @@ public:
      */
     void graduate();
 
+    /**
+     * @brief get_graduation_status
+     * @return true if already graduated
+     */
+    bool get_graduation_status() const;
+
+
 private:
     std::string full_name_;
     std::string last_name_;

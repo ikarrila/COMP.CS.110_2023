@@ -61,19 +61,6 @@ bool Account::sign_course(Course* course)
         std::cout << "Error: Student already graduated." << std::endl;
         return false;
     }
-    // Check if account already has course in signed courses or completed courses
-    for (auto signed_course : signed_courses_) {
-        if (signed_course == course) {
-            std::cout << "Account already has this course in signed courses." << std::endl;
-            return false;
-        }
-    }
-    for (auto completed_course : completed_courses_) {
-        if (completed_course == course) {
-            std::cout << "Account already has this course in completed courses." << std::endl;
-            return false;
-        }
-    }
 
     // Add course to signed courses and print success message
     signed_courses_.push_back(course);
@@ -124,4 +111,9 @@ void Account::graduate()
     // mark the account as graduated
     graduated_ = true;
     std::cout << GRADUATED << std::endl;
+}
+
+bool Account::get_graduation_status() const
+{
+    return graduated_;
 }
