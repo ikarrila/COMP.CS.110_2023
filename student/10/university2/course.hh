@@ -6,7 +6,21 @@
  *
  * In the project, this class should be expanded to
  * include necessary methods and attributes.
+ *
+ * Desc:
+ *   The course class provides functionality to add staff and students
+ * to the course, check if a student has already completed the course,
+ * and print information about the course and its staff members.
+ *   The class also contains methods to get the course code and
+ * credit value. It uses dynamic memory allocation to store the list
+ * of staff and students, which is managed through a vector container.
+ *
+ * Name: Iivari Karrila
+ * Student number: K437292
+ * UserID: gdiika
+ * E-Mail: iivari.karrila@tuni.fi
  * */
+
 #ifndef COURSE_HH
 #define COURSE_HH
 

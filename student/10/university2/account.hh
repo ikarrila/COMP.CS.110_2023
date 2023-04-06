@@ -6,6 +6,26 @@
  *
  * In the project, this class should be expanded to
  * include necessary methods and attributes.
+ *
+ * Desc:
+ *   The Account class is designed to represent a student account in a
+ * university system. It stores information about the student's name,
+ * account number, email, signed and completed courses, and graduation
+ * status. The class provides methods to sign up and complete courses,
+ * get information about the signed and completed courses, get the
+ * student's email and full name, check the student's graduation status,
+ * and mark the student as graduated. The class also constructs the
+ * student's email address based on their name and university suffix.
+ *   Additionally, it checks if the student has already graduated before
+ * allowing them to sign up for a new course. The class uses a vector
+ * to store the signed and completed courses, and provides methods to
+ * access them. The Course class is used as a parameter in the sign up
+ * and complete course methods.
+ *
+ * Name: Iivari Karrila
+ * Student number: K437292
+ * UserID: gdiika
+ * E-Mail: iivari.karrila@tuni.fi
  * */
 #ifndef ACCOUNT_HH
 #define ACCOUNT_HH
