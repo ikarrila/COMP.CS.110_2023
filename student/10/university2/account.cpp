@@ -8,7 +8,7 @@ Account::Account(const std::string& full_name, int account_number,
     full_name_(full_name),
     last_name_(""),
     first_name_(""),
-    account_number_(account_number)
+    account_number_(account_number), graduated_(false)
 {
     std::vector<std::string> name = Utils::split(full_name_, ' ');
     last_name_ = name.back();
@@ -98,3 +98,25 @@ bool Account::complete_course(Course* course)
     return true;
 }
 
+const std::vector<Course*>& Account::get_completed_courses() const
+{
+    return completed_courses_;
+}
+
+const std::vector<Course*>& Account::get_signed_courses() const
+{
+    return signed_courses_;
+}
+
+void Account::graduate()
+{
+    // move all signed courses to completed courses
+    for (auto& course : signed_courses_) {
+        completed_courses_.push_back(course);
+    }
+    signed_courses_.clear();
+
+    // mark the account as graduated
+    graduated_ = true;
+    std::cout << GRADUATED << std::endl;
+}
