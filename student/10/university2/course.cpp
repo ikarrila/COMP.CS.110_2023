@@ -65,10 +65,6 @@ void Course::add_student(Account *new_student)
 
     if (new_student->sign_course(this)){
         course_students_.push_back(new_student);
-        std::cout << STUDENT_ADDED << std::endl;
-    } else {
-        //Test print
-        std::cout << "FAIL" << std::endl;
     }
 }
 

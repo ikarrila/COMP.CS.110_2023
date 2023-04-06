@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-const std::string STUDENT_ADDED = "Signed up on the course.";
+//const std::string STUDENT_ADDED = "Signed up on the course.";
 const std::string STAFF_ADDED = "A new staff member has been added.";
 const std::string STAFF_EXISTS = "Error: Staff member already added on this course.";
 const std::string STUDENT_EXISTS = "Error: Student already added on this course.";

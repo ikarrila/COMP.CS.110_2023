@@ -56,6 +56,10 @@ int Account::get_account_number() const
 
 bool Account::sign_course(Course* course)
 {
+    if (graduated_ == true)
+    {
+        std::cout << "Error: Student already added on this course." << std::endl;
+    }
     // Check if account already has course in signed courses or completed courses
     for (auto signed_course : signed_courses_) {
         if (signed_course == course) {
