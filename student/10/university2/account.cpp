@@ -2,6 +2,7 @@
 #include "utils.hh"
 #include "course.hh"
 #include <iostream>
+#include <memory>
 
 Account::Account(const std::string& full_name, int account_number,
                  int duplicates, const std::string& university_suffix):
@@ -89,10 +90,20 @@ bool Account::complete_course(Course* course)
     std::cout << COMPLETED << std::endl;
     return true;
 }
-
+/*
 const std::vector<Course*>& Account::get_completed_courses() const
 {
     return completed_courses_;
+}*/
+
+std::vector<std::shared_ptr<Course>> Account::get_completed_courses() const
+{
+    std::vector<std::shared_ptr<Course>> courses;
+    for (const auto& course : completed_courses_)
+    {
+        courses.push_back(std::make_shared<Course>(*course));
+    }
+    return courses;
 }
 
 const std::vector<Course*>& Account::get_signed_courses() const

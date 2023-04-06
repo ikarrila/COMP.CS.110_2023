@@ -1,5 +1,6 @@
 #include "university.hh"
 #include <iostream>
+#include <memory>
 
 University::University(const std::string& email_suffix):
     running_number_(111111), email_suffix_(email_suffix)
@@ -187,13 +188,14 @@ void University::print_completed(Params params)
     }
     int credits = 0;
     for (const auto& course : accounts_.at(account)->get_completed_courses()) {
-        course->print_info(true);
-        credits += course->get_credits();
+        std::shared_ptr<Course> c = std::make_shared<Course>(*course);
+        c->print_info(true);
+        credits += c->get_credits();
     }
     std::cout << "Total credits: " << credits << std::endl;
-
 }
 
+/*
 void University::print_study_state(Params params)
 {
     int account = std::stoi(params.at(0));
@@ -208,7 +210,33 @@ void University::print_study_state(Params params)
     }
     std::cout << "Completed:" << std::endl;
     this->print_completed(params);
+}*/
+
+void University::print_study_state(Params params)
+{
+    int account = std::stoi(params.at(0));
+    if ( accounts_.find(account) == accounts_.end() )
+    {
+        std::cout << CANT_FIND << account << std::endl;
+        return;
+    }
+    std::cout << "Current:" << std::endl;
+    for (const auto& course : accounts_.at(account)->get_signed_courses()) {
+        course->print_info(true);
+    }
+    std::cout << "Completed:" << std::endl;
+
+    // Use a shared_ptr to manage the lifetime of the courses
+    std::vector<std::shared_ptr<Course>> completed_courses = accounts_.at(account)->get_completed_courses();
+
+    int credits = 0;
+    for (const auto& course : completed_courses) {
+        course->print_info(true);
+        credits += course->get_credits();
+    }
+    std::cout << "Total credits: " << credits << std::endl;
 }
+
 
 void University::graduate(Params params)
 {

@@ -12,6 +12,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 class Course;
 
@@ -77,7 +78,8 @@ public:
      * @brief get_completed_courses
      * @return vector with all completed courses
      */
-    const std::vector<Course*>& get_completed_courses() const;
+    //const std::vector<Course*>& get_completed_courses() const;
+    std::vector<std::shared_ptr<Course>> get_completed_courses() const;
 
     /**
      * @brief get_signed_courses
