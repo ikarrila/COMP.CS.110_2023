@@ -141,6 +141,7 @@ void University::sign_up(Params params)
     if ( accounts_.at(account)->get_graduation_status() )
     {
         std::cout << ALREADY_GRADUATED << std::endl;
+        return;
     }
     courses_.at(code)->add_student(accounts_.at(account));
 }
