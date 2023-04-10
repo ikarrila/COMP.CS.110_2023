@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::start);
     connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::stop);
     connect(ui->resetButton, &QPushButton::clicked, this, &MainWindow::reset);
-    connect(ui->closeButton, &QPushButton::clicked, this, &MainWindow::close);
 }
 
 MainWindow::~MainWindow()
@@ -56,9 +55,4 @@ void MainWindow::reset()
 {
     ui->lcdNumberSec->display(0);
     ui->lcdNumberMin->display(0);
-}
-
-void MainWindow::close()
-{
-    close();
 }

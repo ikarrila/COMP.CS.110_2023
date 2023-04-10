@@ -27,7 +27,6 @@ private slots:
     void start();
     void stop();
     void reset();
-    void close();
 
 private:
     Ui::MainWindow *ui;
