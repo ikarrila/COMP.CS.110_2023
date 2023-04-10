@@ -7,6 +7,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->lcdNumberMin->setPalette(QColor(170, 255, 0));
+    ui->lcdNumberSec->setPalette(QColor(0, 170, 255));
+    ui->lcdNumberSec->setAutoFillBackground(true);
+    ui->lcdNumberMin->setAutoFillBackground(true);
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->setInterval(1000);
