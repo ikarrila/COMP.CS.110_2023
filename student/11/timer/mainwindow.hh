@@ -23,10 +23,14 @@ public:
 
 private slots:
     // Add your slots here
+    void update();
+    void start();
+    void stop();
+    void reset();
+    void close();
 
 private:
     Ui::MainWindow *ui;
-    // Add other necessary members here
 };
 
 #endif // MAINWINDOW_HH

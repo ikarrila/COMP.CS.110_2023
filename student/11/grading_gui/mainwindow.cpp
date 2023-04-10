@@ -32,6 +32,4 @@ void MainWindow::on_calculatePushButton_clicked()
               "P-Score: " + QString::number(score_from_projects(p_)) + "\n" +
               "Total grade: " + QString::number(calculate_total_grade(n_, g_, p_, e_));
     ui->textBrowser->setText(tuloste);
-
 }
-
