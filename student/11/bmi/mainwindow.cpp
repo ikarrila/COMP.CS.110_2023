@@ -1,6 +1,9 @@
 #include "mainwindow.hh"
 #include "ui_mainwindow.h"
 
+#include <cmath>
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -18,6 +21,11 @@ void MainWindow::on_countButton_clicked()
     weight_ = ui->weightLineEdit->text().toDouble();
     height_ = ui->heightLineEdit->text().toDouble();
 
+    if ( height_ == 0 or ui->heightLineEdit->text().isEmpty())
+    {
+        ui->infoTextBrowser->setText("Cannot count.");
+        return;
+    }
     bmi_ = weight_ / ( height_ * height_ ) * 10000;
 
     ui->resultLabel->setText(QString::number(bmi_));
