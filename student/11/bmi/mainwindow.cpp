@@ -24,6 +24,8 @@ void MainWindow::on_countButton_clicked()
     if ( height_ == 0 or ui->heightLineEdit->text().isEmpty())
     {
         ui->infoTextBrowser->setText("Cannot count.");
+        ui->resultLabel->setText("Cannot count.");
+
         return;
     }
     bmi_ = weight_ / ( height_ * height_ ) * 10000;
