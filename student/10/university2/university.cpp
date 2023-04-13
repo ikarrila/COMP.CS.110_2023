@@ -228,17 +228,20 @@ void University::print_study_state(Params params)
     std::cout << "Total credits: " << credits << std::endl;
 }
 
-
 void University::graduate(Params params)
 {
     // Extract student ID and check if the account exists in the system
     int account = std::stoi(params.at(0));
-    if ( accounts_.find(account) == accounts_.end() )
+    auto account_iter = accounts_.find(account);
+    if (account_iter == accounts_.end())
     {
         std::cout << CANT_FIND << account << std::endl;
         return;
     }
+
     // Graduate method completes all courses and blocks further
     //signups for the account
-    accounts_.at(account)->graduate();
+    Account* account_ptr = account_iter->second;
+    account_ptr->graduate();
+
 }
