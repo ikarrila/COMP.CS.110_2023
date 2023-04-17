@@ -39,6 +39,10 @@ private slots:
     void resetButtonPress();
 
     void update();
+
+    void drawBoard();
+
+    void selectPiece(int row, int column);
 private:
     Ui::MainWindow *ui;
 
@@ -48,7 +52,8 @@ private:
     const int MARGIN = 60;
     const int BORDER_OFFSET = 10;
 
-
+    Point selected_ = {0, 0};
+    Point target_= {0, 0};
 
     QTimer* timer_;
     // Vector containing game pieces

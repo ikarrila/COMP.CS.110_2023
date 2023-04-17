@@ -52,6 +52,8 @@ public:
     // Returns true if the point is inside the game grid, otherwise returns false.
     bool is_valid_point(const Point p);
 
+    unsigned int get_total_moves();
+
     Q_OBJECT
 
 signals:
@@ -90,6 +92,9 @@ private:
 
     // Gameboard
     std::vector<std::vector<Slot_type>> board_;
+
+    // Moves are used as score
+    unsigned int total_moves_ = 0;
 };
 
 #endif // GAMEBOARD_HH

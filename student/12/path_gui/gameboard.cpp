@@ -188,6 +188,7 @@ bool GameBoard::horizontal_move(unsigned int row, unsigned int column1, unsigned
     // Moving the button, since it is possible
     board_.at(row).at(column2) = board_.at(row).at(column1);
     board_.at(row).at(column1) = EMPTY;
+    ++total_moves_;
     return true;
 }
 
@@ -239,4 +240,9 @@ bool GameBoard::is_same_color(const Row_type &r, Slot_type color)
         }
     }
     return true;
+}
+
+unsigned int GameBoard::get_total_moves()
+{
+    return total_moves_;
 }
