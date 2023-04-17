@@ -2,6 +2,7 @@
 #define GAMEBOARD_HH
 
 #include <vector>
+#include <QGraphicsScene>
 
 // Possible slots in the gameboard
 enum Slot_type {RED, GREEN, EMPTY, UNUSED};
@@ -25,10 +26,10 @@ struct Point
     }
 };
 
-class GameBoard
+class GameBoard : public QGraphicsScene
 {
 public:
-    GameBoard();
+    GameBoard(QObject* parent = nullptr);
     ~GameBoard();
 
     // Prints the grid
@@ -50,6 +51,17 @@ public:
     // Checks the validity of the given point.
     // Returns true if the point is inside the game grid, otherwise returns false.
     bool is_valid_point(const Point p);
+
+    Q_OBJECT
+
+signals:
+    //Click signal to determine selected piece.
+    void mouseClicked(QPointF point);
+
+protected:
+    //mousePressEvent override function to emit a custom signal that will
+    //be collected in MainWindow class.
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
     // Initializes a row, all buttons with the given color.

@@ -6,37 +6,36 @@
 #include <QGraphicsEllipseItem>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsEffect>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , board_(new GameBoard)
 {
     ui->setupUi(this);
 
-    board_ = GameBoard();
-    // We need a graphics scene in which to draw a circle
-    scene_ = new QGraphicsScene(this);
+    //board_ = GameBoard();
+    // We need a graphics scene in which to draw the gameboard
+    scene_ = board_;
 
-    // The width of the graphicsView is BORDER_RIGHT added by 2,
-    // since the borders take one pixel on each side
-    // (1 on the left, and 1 on the right).
-    // Similarly, the height of the graphicsView is BORDER_DOWN added by 2.
+    // The width  and height of the graphicsView
     ui->graphicsView->setGeometry(20, 50, 350, 350);
     ui->graphicsView->setScene(scene_);
 
-    // The width of the scene_ is BORDER_RIGHT decreased by 1 and
-    // the height of it is BORDER_DOWN decreased by 1,
-    // because the circle is considered to be inside the sceneRect,
-    // if its upper left corner is inside the sceneRect.
+    // The dimensions of the scene
     scene_->setSceneRect(0, 0, 240, 300);
 
     // Defining the color and outline of the circle
     InitBoard();
+    connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
+    connect(ui->resetButton, &QPushButton::clicked, this, &MainWindow::resetButtonPress);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete board_;
 }
 
 void MainWindow::InitBoard()
@@ -45,12 +44,12 @@ void MainWindow::InitBoard()
     {
         for(auto j = 0; j < 5; ++j)
         {
-            if (board_.is_valid_point({i,j}))
+            if (board_->is_valid_point({i,j}))
             {
                 QBrush piece_color;
                 QPen piece_border(Qt::black);
                 piece_border.setWidth(0);
-                switch(board_.which_slot({i, j}))
+                switch(board_->which_slot({i, j}))
                 {
                 case GREEN: piece_color = (Qt::green); break;
                 case RED: piece_color = (Qt::red); break;
@@ -69,32 +68,43 @@ void MainWindow::InitBoard()
         }
     }
 }
-/*
-void GameBoard::mousePressEvent(QGraphicsSceneMouseEvent* event)
+
+// Perform actions with the mouse click
+void MainWindow::handleMouseClick(QPointF point)
 {
-    QGraphicsScene::mousePressEvent(event);
+    if (point.isNull())
+    {
+        return;
+    }
+    // Get the list of items at the clicked scene position
+    QList<QGraphicsItem*> itemsAtPos = scene_->items(point);
 
-    QPoint clickPosition = event->scenePos().toPoint();
+    // Iterate through the items and check if any of them are QGraphicsEllipseItem
+    for (QGraphicsItem* item : itemsAtPos)
+    {
+        QGraphicsEllipseItem* circle = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+        if (circle)
+        {
+            // This is a circle, perform actions on the circle
+            std::cout << "Circle clicked: " << point.x() << ":" << point.y() << std::endl;
 
-    if (0 <= clickPosition.x() and clickPosition.x() <= GRID_SIDE * SIZE and
-        0 <= clickPosition.y() and clickPosition.y() <= GRID_SIDE * SIZE) {
-        // Only accept new mouse clicks when animations are not running.
-        if (animations_.state() != QAbstractAnimation::Running) {
-            emit mouseClick(clickPosition.x() / GRID_SIDE,
-                            clickPosition.y() / GRID_SIDE);
+            QPen thick_border(Qt::black);
+            thick_border.setWidth(3);
+            circle->setPen(thick_border);
         }
     }
-}*/
+}
 
-void MainWindow::handle_character_clicks()
+void MainWindow::handle_piece_click()
 {
     for (auto& piece : pieces_)
-    {/*
-        if (piece == sender())
-        {
-            //handle piece click HERE
-            return; // For efficiency reasons
-                    // (only one button can be clicked at a time)
-        }*/
+    {
+        std::cout << piece << std::endl;
     }
+}
+
+void MainWindow::resetButtonPress()
+{
+    scene_->clear();
+    InitBoard();
 }

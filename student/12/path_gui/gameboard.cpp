@@ -1,7 +1,9 @@
 #include "gameboard.hh"
 #include <iostream>
+#include <QGraphicsSceneMouseEvent>
 
-GameBoard::GameBoard()
+GameBoard::GameBoard(QObject* parent)
+    : QGraphicsScene(parent)
 {
     init_grid();
 }
@@ -104,6 +106,13 @@ bool GameBoard::is_valid_point(const Point p)
         return false;
     }
     return true;
+}
+
+//Added customized handler for mouse clicks
+void GameBoard::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    QPointF point = event->scenePos();
+    emit mouseClicked(point);
 }
 
 Row_type GameBoard::init_top_or_bottom_row(Slot_type color)

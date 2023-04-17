@@ -7,6 +7,7 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <iostream>
+#include <QPoint>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,19 +27,21 @@ public:
     void drawBackground(QPainter* painter, QRectF const& rect);
 
     // Handler for mouse click events.
-    //void mousePressEvent(QGraphicsSceneMouseEvent* event);
-    void handle_character_clicks();
-
-    //void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    void handle_piece_click();
 
 signals:
     // Emitted when user clicks a piece.
     void mouseClick(int x, int y);
 
+private slots:
+    void handleMouseClick(QPointF point);
+
+    void resetButtonPress();
+
 private:
     Ui::MainWindow *ui;
 
-    GameBoard board_;
+    GameBoard* board_;
     QGraphicsScene* scene_;         // a surface for
     const int PIECE_SIZE = 30;      // how large the game pieces appear
     const int MARGIN = 60;
