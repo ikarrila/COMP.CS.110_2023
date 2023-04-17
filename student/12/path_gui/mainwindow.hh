@@ -38,6 +38,7 @@ private slots:
 
     void resetButtonPress();
 
+    void update();
 private:
     Ui::MainWindow *ui;
 
@@ -47,7 +48,9 @@ private:
     const int MARGIN = 60;
     const int BORDER_OFFSET = 10;
 
-    QTimer timer_;
+
+
+    QTimer* timer_;
     // Vector containing game pieces
     std::vector<QGraphicsEllipseItem*> pieces_;
 };

@@ -26,6 +26,14 @@ MainWindow::MainWindow(QWidget *parent)
     // The dimensions of the scene
     scene_->setSceneRect(0, 0, 240, 300);
 
+    // Setting timer color
+    ui->lcdNumberSeconds->setPalette(QColor(255, 255, 255));
+    ui->lcdNumberSeconds->setAutoFillBackground(true);
+
+    // Setting other variables for timer to update per second
+    timer_ = new QTimer(this);
+    connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
+
     // Defining the color and outline of the circle
     InitBoard();
     connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
@@ -61,9 +69,6 @@ void MainWindow::InitBoard()
                 pieces_.push_back(scene_->addEllipse(i * MARGIN + BORDER_OFFSET,
                     j * MARGIN + BORDER_OFFSET, PIECE_SIZE, PIECE_SIZE,
                     piece_border, piece_color));
-
-                //connect(circle_, &QPushButton::clicked,
-                        //this, &MainWindow::handle_character_clicks);
             }
         }
     }
@@ -91,6 +96,10 @@ void MainWindow::handleMouseClick(QPointF point)
             QPen thick_border(Qt::black);
             thick_border.setWidth(3);
             circle->setPen(thick_border);
+            if (not timer_->isActive())
+            {
+                timer_->start(1000);
+            }
         }
     }
 }
@@ -106,5 +115,14 @@ void MainWindow::handle_piece_click()
 void MainWindow::resetButtonPress()
 {
     scene_->clear();
+    ui->lcdNumberSeconds->display(0);
+    timer_->stop();
     InitBoard();
+}
+
+void MainWindow::update()
+{
+    int seconds = ui->lcdNumberSeconds->intValue();
+    ++seconds;
+    ui->lcdNumberSeconds->display(seconds);
 }
