@@ -29,6 +29,9 @@ public:
     // Handler for mouse click events.
     void handle_piece_click();
 
+    //CHANGE DESCRIPTION
+    void checkGameStatusAndPromptReset();
+
 signals:
     // Emitted when user clicks a piece.
     void mouseClick(int x, int y);
@@ -52,8 +55,10 @@ private:
     const int MARGIN = 60;
     const int BORDER_OFFSET = 10;
 
-    Point selected_ = {0, 0};
-    Point target_= {0, 0};
+    //Initializing both points with invalid coordinates at first
+    //This is done to ease input checking later on
+    Point selected_ = {-1, -1};
+    Point target_ = {-1, -1};
 
     QTimer* timer_;
     // Vector containing game pieces
