@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
+    <width>679</width>
     <height>490</height>
    </rect>
   </property>
@@ -99,13 +99,207 @@
      <string>Total moves:</string>
     </property>
    </widget>
+   <widget class="QSpinBox" name="spinBoxRed">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>90</y>
+      <width>45</width>
+      <height>29</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>90</y>
+      <width>211</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="1">
+      <widget class="QSlider" name="horizontalSliderRed">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelBlue">
+       <property name="text">
+        <string>blue:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelRed">
+       <property name="text">
+        <string>red:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSlider" name="horizontalSliderBlue">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSlider" name="horizontalSliderGreen">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelGreen">
+       <property name="text">
+        <string>green:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QSpinBox" name="spinBoxGreen">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>120</y>
+      <width>45</width>
+      <height>29</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBoxBlue">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>160</y>
+      <width>45</width>
+      <height>29</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>70</y>
+      <width>221</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set colour for top pieces</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>220</y>
+      <width>251</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set colour for bottom pieces</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBoxRedBottom">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>250</y>
+      <width>45</width>
+      <height>29</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>250</y>
+      <width>211</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="1">
+      <widget class="QSlider" name="horizontalSliderRedBottom">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelBlue_2">
+       <property name="text">
+        <string>blue:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelRed_2">
+       <property name="text">
+        <string>red:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSlider" name="horizontalSliderBlueBottom">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSlider" name="horizontalSliderGreenBottom">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelGreen_2">
+       <property name="text">
+        <string>green:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QSpinBox" name="spinBoxGreenBottom">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>280</y>
+      <width>45</width>
+      <height>29</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBoxBlueBottom">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>320</y>
+      <width>45</width>
+      <height>29</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>524</width>
+     <width>679</width>
      <height>25</height>
     </rect>
    </property>

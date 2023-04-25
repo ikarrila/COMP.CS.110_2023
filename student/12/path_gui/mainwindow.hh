@@ -48,6 +48,11 @@ private slots:
     void drawBoard();
 
     void selectPiece(int row, int column);
+
+    void onColorChanged();
+
+    void onBottomColorChanged();
+
 private:
     Ui::MainWindow *ui;
 
@@ -67,5 +72,10 @@ private:
     std::vector<QGraphicsEllipseItem*> pieces_;
 
     QColor background_colour = Qt::gray;
+    QColor top_colour = Qt::green;
+    QColor bottom_colour = Qt::red;
+
+    //Colorpicker max
+    const int RGB_VALUE_MAX = 255;
 };
 #endif // MAINWINDOW_HH

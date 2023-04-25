@@ -40,6 +40,61 @@ MainWindow::MainWindow(QWidget *parent)
     setBackgroundColor();
     connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
     connect(ui->resetButton, &QPushButton::clicked, this, &MainWindow::resetButtonPress);
+
+//NOTE THIS IS COLORPICKER CODE:
+    ui->horizontalSliderRed->setMinimum(0);
+    ui->horizontalSliderRed->setMaximum(RGB_VALUE_MAX);
+
+    ui->horizontalSliderGreen->setMinimum(0);
+    ui->horizontalSliderGreen->setMaximum(RGB_VALUE_MAX);
+
+    ui->horizontalSliderBlue->setMinimum(0);
+    ui->horizontalSliderBlue->setMaximum(RGB_VALUE_MAX);
+
+    ui->spinBoxRed->setMinimum(0);
+    ui->spinBoxRed->setMaximum(RGB_VALUE_MAX);
+
+    ui->spinBoxBlue->setMinimum(0);
+    ui->spinBoxBlue->setMaximum(RGB_VALUE_MAX);
+
+    ui->spinBoxGreen->setMinimum(0);
+    ui->spinBoxGreen->setMaximum(RGB_VALUE_MAX);
+
+    connect(ui->horizontalSliderRed, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
+    connect(ui->horizontalSliderGreen, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
+    connect(ui->horizontalSliderBlue, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
+
+    connect(ui->spinBoxRed, &QSpinBox::valueChanged, ui->horizontalSliderRed, &QSlider::setValue);
+    connect(ui->spinBoxGreen, &QSpinBox::valueChanged, ui->horizontalSliderGreen, &QSlider::setValue);
+    connect(ui->spinBoxBlue, &QSpinBox::valueChanged, ui->horizontalSliderBlue, &QSlider::setValue);
+
+    //This is for Bottom colour picker
+    ui->horizontalSliderRedBottom->setMinimum(0);
+    ui->horizontalSliderRedBottom->setMaximum(RGB_VALUE_MAX);
+
+    ui->horizontalSliderGreenBottom->setMinimum(0);
+    ui->horizontalSliderGreenBottom->setMaximum(RGB_VALUE_MAX);
+
+    ui->horizontalSliderBlueBottom->setMinimum(0);
+    ui->horizontalSliderBlueBottom->setMaximum(RGB_VALUE_MAX);
+
+    ui->spinBoxRedBottom->setMinimum(0);
+    ui->spinBoxRedBottom->setMaximum(RGB_VALUE_MAX);
+
+    ui->spinBoxBlueBottom->setMinimum(0);
+    ui->spinBoxBlueBottom->setMaximum(RGB_VALUE_MAX);
+
+    ui->spinBoxGreenBottom->setMinimum(0);
+    ui->spinBoxGreenBottom->setMaximum(RGB_VALUE_MAX);
+
+    connect(ui->horizontalSliderRedBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
+    connect(ui->horizontalSliderGreenBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
+    connect(ui->horizontalSliderBlueBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
+
+    connect(ui->spinBoxRedBottom, &QSpinBox::valueChanged, ui->horizontalSliderRedBottom, &QSlider::setValue);
+    connect(ui->spinBoxGreenBottom, &QSpinBox::valueChanged, ui->horizontalSliderGreenBottom, &QSlider::setValue);
+    connect(ui->spinBoxBlueBottom, &QSpinBox::valueChanged, ui->horizontalSliderBlueBottom, &QSlider::setValue);
+
 }
 
 MainWindow::~MainWindow()
@@ -110,7 +165,7 @@ void MainWindow::handleMouseClick(QPointF point)
             if (board_->which_slot({selected_.x, selected_.y}) == EMPTY or
                     board_->which_slot({selected_.x, selected_.y}) == UNUSED)
             {
-                std::cout << "Unsuitable selection " << selected_.x << selected_.y << std::endl;
+                std::cout << "Unsuitable selection " << std::endl;
                 selected_ = {-1, -1};
                 return;
             }
@@ -120,7 +175,6 @@ void MainWindow::handleMouseClick(QPointF point)
         {
             target_.x = row;
             target_.y = column;
-            std::cout << "Target: " << target_.x << target_.y << std::endl;
 
             if (board_->which_slot({target_.x, target_.y}) == RED or
                     board_->which_slot({target_.x, target_.y}) == UNUSED)
@@ -237,8 +291,8 @@ void MainWindow::drawBoard()
                 piece_border.setWidth(0);
                 switch(board_->which_slot({i, j}))
                 {
-                case GREEN: piece_color = (Qt::green); break;
-                case RED: piece_color = (Qt::red); break;
+                case GREEN: piece_color = top_colour; break;
+                case RED: piece_color = bottom_colour; break;
                 case EMPTY: piece_color = (Qt::gray); break;
                 case UNUSED: ; continue;
                 }
@@ -277,4 +331,20 @@ void MainWindow::checkGameStatusAndPromptReset()
             // Should never be reached
             break;
     }
+}
+
+void MainWindow::onColorChanged()
+{
+    QColor selectedColor(ui->horizontalSliderRed->value(),
+                         ui->horizontalSliderGreen->value(),
+                         ui->horizontalSliderBlue->value());
+    top_colour = selectedColor;
+}
+
+void MainWindow::onBottomColorChanged()
+{
+    QColor selectedColor(ui->horizontalSliderRedBottom->value(),
+                         ui->horizontalSliderGreenBottom->value(),
+                         ui->horizontalSliderBlueBottom->value());
+    bottom_colour = selectedColor;
 }
