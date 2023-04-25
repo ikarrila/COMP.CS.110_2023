@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Defining the color and outline of the circle
     InitBoard();
+    setBackgroundColor();
     connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
     connect(ui->resetButton, &QPushButton::clicked, this, &MainWindow::resetButtonPress);
 }
@@ -45,6 +46,16 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete board_;
+}
+
+void MainWindow::setBackgroundColor()
+{
+    QPalette pal = QPalette();
+
+    // set black background gray if not won
+    pal.setColor(QPalette::Window, background_colour);
+    this->setAutoFillBackground(true);
+    this->setPalette(pal);
 }
 
 void MainWindow::InitBoard()
@@ -91,31 +102,51 @@ void MainWindow::handleMouseClick(QPointF point)
 
     if (board_->is_valid_point({row, column}))
     {
+        //If nothing yet selected, pick a piece to move
         if (selected_.x == -1 && selected_.y == -1)
         {
             selected_.x = row;
             selected_.y = column;
-            std::cout << "Selected: " << selected_.x << selected_.y << std::endl;
+            if (board_->which_slot({selected_.x, selected_.y}) == EMPTY or
+                    board_->which_slot({selected_.x, selected_.y}) == UNUSED)
+            {
+                std::cout << "Unsuitable selection " << selected_.x << selected_.y << std::endl;
+                selected_ = {-1, -1};
+                return;
+            }
         }
+        //Otherwise pick a target for selection
         else
         {
             target_.x = row;
             target_.y = column;
             std::cout << "Target: " << target_.x << target_.y << std::endl;
 
-            board_->move(selected_, target_);
+            if (board_->which_slot({target_.x, target_.y}) == RED or
+                    board_->which_slot({target_.x, target_.y}) == UNUSED)
+            {
+                std::cout << "Move not possible" << std::endl;
+                target_ = {-1, -1};
+                return;
+            }
+            else if (board_->move(selected_, target_))
+            {
+                board_->move(selected_, target_);
 
-            board_->print();
-            std::cout << "Source XY: " << selected_.x + 1 <<  selected_.y + 1 << std::endl;
-            std::cout << "Target XY: " << target_.x + 1 <<  target_.y + 1 << std::endl;
-            board_->print();
+                board_->print();
+                std::cout << "Source XY: " << selected_.x + 1 <<  selected_.y + 1 << std::endl;
+                std::cout << "Target XY: " << target_.x + 1 <<  target_.y + 1 << std::endl;
+                board_->print();
+                QPen normal_border(Qt::black);
+                normal_border.setWidth(0);
+                drawBoard();
+                std::cout << board_->get_total_moves() << std::endl;
+                ui->clickCountLabel->setText(QString::number(board_->get_total_moves()));
+            } else {
+                std::cout << "Illegal move" << std::endl;
+            }
             target_ = {-1, -1};
             selected_ = {-1, -1};
-            QPen normal_border(Qt::black);
-            normal_border.setWidth(0);
-            drawBoard();
-            std::cout << board_->get_total_moves() << std::endl;
-            ui->clickCountLabel->setText(QString::number(board_->get_total_moves()));
         }
     }
     else
@@ -142,6 +173,7 @@ void MainWindow::handleMouseClick(QPointF point)
     }
     if (board_->is_game_over())
     {
+        background_colour = Qt::yellow;
         checkGameStatusAndPromptReset();
     }
 }
@@ -175,6 +207,7 @@ void MainWindow::resetButtonPress()
     // Update the QGraphicsView to use the new scene_
     ui->graphicsView->setScene(scene_);
     ui->lcdNumberSeconds->display(0);
+    ui->clickCountLabel->setText(QString::number(board_->get_total_moves()));
     timer_->stop();
     InitBoard();
     // Reconnect the handleMouseClick function to the new board_ instance
@@ -191,6 +224,7 @@ void MainWindow::update()
 void MainWindow::drawBoard()
 {
     scene_->clear();
+    setBackgroundColor();
 
     for(auto i = 0; i < 5; ++i)
     {

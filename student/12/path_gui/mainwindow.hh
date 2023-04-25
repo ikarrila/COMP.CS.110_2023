@@ -21,6 +21,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void setBackgroundColor();
+
     void InitBoard();
 
     // Draws the grid lines.
@@ -63,5 +65,7 @@ private:
     QTimer* timer_;
     // Vector containing game pieces
     std::vector<QGraphicsEllipseItem*> pieces_;
+
+    QColor background_colour = Qt::gray;
 };
 #endif // MAINWINDOW_HH
