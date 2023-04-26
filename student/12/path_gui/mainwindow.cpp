@@ -51,22 +51,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->horizontalSliderBlue->setMinimum(0);
     ui->horizontalSliderBlue->setMaximum(RGB_VALUE_MAX);
 
-    ui->spinBoxRed->setMinimum(0);
-    ui->spinBoxRed->setMaximum(RGB_VALUE_MAX);
-
-    ui->spinBoxBlue->setMinimum(0);
-    ui->spinBoxBlue->setMaximum(RGB_VALUE_MAX);
-
-    ui->spinBoxGreen->setMinimum(0);
-    ui->spinBoxGreen->setMaximum(RGB_VALUE_MAX);
-
     connect(ui->horizontalSliderRed, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
     connect(ui->horizontalSliderGreen, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
     connect(ui->horizontalSliderBlue, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
 
-    connect(ui->spinBoxRed, &QSpinBox::valueChanged, ui->horizontalSliderRed, &QSlider::setValue);
-    connect(ui->spinBoxGreen, &QSpinBox::valueChanged, ui->horizontalSliderGreen, &QSlider::setValue);
-    connect(ui->spinBoxBlue, &QSpinBox::valueChanged, ui->horizontalSliderBlue, &QSlider::setValue);
+    ui->horizontalSliderGreen->setValue(RGB_VALUE_MAX);
 
     //This is for Bottom colour picker
     ui->horizontalSliderRedBottom->setMinimum(0);
@@ -78,23 +67,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->horizontalSliderBlueBottom->setMinimum(0);
     ui->horizontalSliderBlueBottom->setMaximum(RGB_VALUE_MAX);
 
-    ui->spinBoxRedBottom->setMinimum(0);
-    ui->spinBoxRedBottom->setMaximum(RGB_VALUE_MAX);
-
-    ui->spinBoxBlueBottom->setMinimum(0);
-    ui->spinBoxBlueBottom->setMaximum(RGB_VALUE_MAX);
-
-    ui->spinBoxGreenBottom->setMinimum(0);
-    ui->spinBoxGreenBottom->setMaximum(RGB_VALUE_MAX);
-
     connect(ui->horizontalSliderRedBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
     connect(ui->horizontalSliderGreenBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
     connect(ui->horizontalSliderBlueBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
 
-    connect(ui->spinBoxRedBottom, &QSpinBox::valueChanged, ui->horizontalSliderRedBottom, &QSlider::setValue);
-    connect(ui->spinBoxGreenBottom, &QSpinBox::valueChanged, ui->horizontalSliderGreenBottom, &QSlider::setValue);
-    connect(ui->spinBoxBlueBottom, &QSpinBox::valueChanged, ui->horizontalSliderBlueBottom, &QSlider::setValue);
-
+    ui->horizontalSliderRedBottom->setValue(RGB_VALUE_MAX);
 }
 
 MainWindow::~MainWindow()
@@ -280,6 +257,8 @@ void MainWindow::drawBoard()
     scene_->clear();
     setBackgroundColor();
 
+    drawIcons();
+
     for(auto i = 0; i < 5; ++i)
     {
         for(auto j = 0; j < 5; ++j)
@@ -339,6 +318,7 @@ void MainWindow::onColorChanged()
                          ui->horizontalSliderGreen->value(),
                          ui->horizontalSliderBlue->value());
     top_colour = selectedColor;
+    drawBoard();
 }
 
 void MainWindow::onBottomColorChanged()
@@ -347,4 +327,24 @@ void MainWindow::onBottomColorChanged()
                          ui->horizontalSliderGreenBottom->value(),
                          ui->horizontalSliderBlueBottom->value());
     bottom_colour = selectedColor;
+    drawBoard();
+}
+
+void MainWindow::drawIcons()
+{
+    QPixmap resetLogo(QString::fromStdString(":/reset.png"));
+    QPixmap pauseLogo(QString::fromStdString(":/pause.png"));
+    QPixmap closeLogo(QString::fromStdString(":/close.png"));
+    resetLogo = resetLogo.scaled(50, 50);
+    pauseLogo = pauseLogo.scaled(50, 50);
+    closeLogo = closeLogo.scaled(50, 50);
+
+    ui->resetButton->setGeometry(20, 10, 80, 30);
+    ui->resetButton->setIcon(resetLogo);
+
+    ui->pauseButton->setGeometry(100, 10, 80, 30);
+    ui->pauseButton->setIcon(pauseLogo);
+
+    ui->closeButton->setGeometry(180, 10, 80, 30);
+    ui->closeButton->setIcon(closeLogo);
 }

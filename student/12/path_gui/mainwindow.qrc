@@ -1,0 +1,7 @@
+<RCC>
+    <qresource>
+        <file alias="reset.png">Resources/reset.png</file>
+        <file alias="pause.png">Resources/pause.png</file>
+        <file alias="close.png">Resources/close.png</file>
+    </qresource>
+</RCC>

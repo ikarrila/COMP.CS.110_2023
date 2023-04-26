@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>679</width>
+    <width>601</width>
     <height>490</height>
    </rect>
   </property>
@@ -99,22 +99,12 @@
      <string>Total moves:</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBoxRed">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>90</y>
-      <width>45</width>
-      <height>29</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>400</x>
       <y>90</y>
-      <width>211</width>
+      <width>161</width>
       <height>101</height>
      </rect>
     </property>
@@ -163,26 +153,6 @@
      </item>
     </layout>
    </widget>
-   <widget class="QSpinBox" name="spinBoxGreen">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>120</y>
-      <width>45</width>
-      <height>29</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBoxBlue">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>160</y>
-      <width>45</width>
-      <height>29</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
@@ -209,22 +179,12 @@
      <string>Set colour for bottom pieces</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBoxRedBottom">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>250</y>
-      <width>45</width>
-      <height>29</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QWidget" name="gridLayoutWidget_2">
     <property name="geometry">
      <rect>
       <x>400</x>
       <y>250</y>
-      <width>211</width>
+      <width>161</width>
       <height>101</height>
      </rect>
     </property>
@@ -273,33 +233,13 @@
      </item>
     </layout>
    </widget>
-   <widget class="QSpinBox" name="spinBoxGreenBottom">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>280</y>
-      <width>45</width>
-      <height>29</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBoxBlueBottom">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>320</y>
-      <width>45</width>
-      <height>29</height>
-     </rect>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>679</width>
+     <width>601</width>
      <height>25</height>
     </rect>
    </property>

@@ -77,5 +77,7 @@ private:
 
     //Colorpicker max
     const int RGB_VALUE_MAX = 255;
+
+    void drawIcons();
 };
 #endif // MAINWINDOW_HH
