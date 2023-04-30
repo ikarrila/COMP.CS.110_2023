@@ -1,0 +1,36 @@
+Rules of the game:
+
+Move pieces so that the ones on the top and bottom row switch places. Points are given based on time and efficiency. (number of moves)
+
+Basic functions:
+
+- The game field is shown graphically using QT GraphicsView objects.
+- There are two colours, which can be edited using sliders on the right
+- A piece can be selected by clicking, and moved by clicking an empty slot
+- Illegal moves are prohibited, and print will inform the user when that happens
+- There exists an option to reset the game by clicking the "Reset" button. This can be done at any time even after the game has been won
+- There is a timer and a label to inform on the amount of moves made
+
+Extra features implemented:
+
+1. The user can choose the colors of the game pieces by using the sliders on the right
+2. Icons have been used for Reset, Pause, and Close icons in addition to text
+3. TODO
+4. TODO
+5. TODO
+6. The game starts with grey background colour. After a successful win with 31 moves, it changes to golden yellow background. Resetting the game sets original colour. (TODO)
+7. TODO
+8. The game has a pause button, from which the player can pause the timer. This is possible only when the game is on. The game does not respond when it is paused. The game informs user about the pause using labels on screen.
+9. TODO
+
+Program structure and design decisions
+
+- The game works by using GraphicsView objects as pieces and piece slots
+- The logic is directly based on gameboard.hh
+
+The dependencies and game situations
+
+- Timer starts only after the first move has been made and runs until victory screen is shown or pause button clicked
+- Sliders on the right side change piece colours in real time
+- After the game has been won, a victory screen presents three options: Reset and start a new game, close the screen to look at the game board, and exit the whole program
+
