@@ -10,6 +10,13 @@
     <height>490</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -53,7 +60,7 @@
    <widget class="QLabel" name="clickCountLabel">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>490</x>
       <y>20</y>
       <width>63</width>
       <height>20</height>
@@ -118,6 +125,13 @@
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="labelBlue">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>blue:</string>
        </property>
@@ -125,6 +139,13 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="labelRed">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>red:</string>
        </property>
@@ -146,6 +167,13 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="labelGreen">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>green:</string>
        </property>
@@ -162,6 +190,13 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
     <property name="text">
      <string>Set colour for top pieces</string>
     </property>
@@ -174,6 +209,13 @@
       <width>251</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
     </property>
     <property name="text">
      <string>Set colour for bottom pieces</string>
@@ -198,6 +240,13 @@
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="labelBlue_2">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>blue:</string>
        </property>
@@ -205,6 +254,13 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="labelRed_2">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>red:</string>
        </property>
@@ -226,12 +282,40 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="labelGreen_2">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>green:</string>
        </property>
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="pauseNotificationLabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>410</y>
+      <width>341</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -240,7 +324,7 @@
      <x>0</x>
      <y>0</y>
      <width>601</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

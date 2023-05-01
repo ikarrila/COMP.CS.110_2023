@@ -3,5 +3,6 @@
         <file alias="reset.png">Resources/reset.png</file>
         <file alias="pause.png">Resources/pause.png</file>
         <file alias="close.png">Resources/close.png</file>
+	<file alias="play.png">Resources/play.png</file>
     </qresource>
 </RCC>

@@ -53,6 +53,8 @@ private slots:
 
     void onBottomColorChanged();
 
+    void onPauseButtonClick();
+
 private:
     Ui::MainWindow *ui;
 
@@ -77,6 +79,9 @@ private:
 
     //Colorpicker max
     const int RGB_VALUE_MAX = 255;
+
+    bool paused_ = false;
+    std::string pauseButtonIcon_ = ":/pause.png";
 
     void drawIcons();
 };

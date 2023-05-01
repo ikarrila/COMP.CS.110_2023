@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
     connect(ui->resetButton, &QPushButton::clicked, this, &MainWindow::resetButtonPress);
 
+    ui->pauseNotificationLabel->setStyleSheet("color: red;");
+
 //NOTE THIS IS COLORPICKER CODE:
     ui->horizontalSliderRed->setMinimum(0);
     ui->horizontalSliderRed->setMaximum(RGB_VALUE_MAX);
@@ -72,6 +74,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->horizontalSliderBlueBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
 
     ui->horizontalSliderRedBottom->setValue(RGB_VALUE_MAX);
+
+    //Define Pause button
+    connect(ui->pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClick);
 }
 
 MainWindow::~MainWindow()
@@ -123,6 +128,12 @@ void MainWindow::handleMouseClick(QPointF point)
     if (point.isNull())
     {
         std::cout << point.x() << point.y() << std::endl;
+        return;
+    }
+    if (paused_)
+    {
+        std::cout << "Game is paused. Press continue to unpause" << std::endl;
+        ui->pauseNotificationLabel->setText("Game is paused!");
         return;
     }
 
@@ -333,18 +344,37 @@ void MainWindow::onBottomColorChanged()
 void MainWindow::drawIcons()
 {
     QPixmap resetLogo(QString::fromStdString(":/reset.png"));
-    QPixmap pauseLogo(QString::fromStdString(":/pause.png"));
+    QPixmap pauseLogo(QString::fromStdString(pauseButtonIcon_));
     QPixmap closeLogo(QString::fromStdString(":/close.png"));
     resetLogo = resetLogo.scaled(50, 50);
     pauseLogo = pauseLogo.scaled(50, 50);
     closeLogo = closeLogo.scaled(50, 50);
 
-    ui->resetButton->setGeometry(20, 10, 80, 30);
+    ui->resetButton->setGeometry(20, 10, 90, 30);
     ui->resetButton->setIcon(resetLogo);
 
-    ui->pauseButton->setGeometry(100, 10, 80, 30);
+    ui->pauseButton->setGeometry(110, 10, 90, 30);
     ui->pauseButton->setIcon(pauseLogo);
 
-    ui->closeButton->setGeometry(180, 10, 80, 30);
+    ui->closeButton->setGeometry(200, 10, 90, 30);
     ui->closeButton->setIcon(closeLogo);
+}
+
+void MainWindow::onPauseButtonClick()
+{
+    if (!paused_)
+    {
+        pauseButtonIcon_ = ":/play.png";
+        ui->pauseButton->setText("Continue");
+        timer_->stop();
+        paused_ = true;
+    } else
+    {
+        pauseButtonIcon_ = ":/pause.png";
+        ui->pauseButton->setText("Pause");
+        timer_->start(1000);
+        paused_ = false;
+        ui->pauseNotificationLabel->setText("");
+    }
+    drawIcons();
 }
