@@ -77,6 +77,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Define Pause button
     connect(ui->pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClick);
+
+    //Define 'show me the solution' button
+    connect(ui->hintButton, &QPushButton::clicked, this, &MainWindow::animateSolution);
+
+    currentMoveIndex_ = 0;
+    animationTimer_ = new QTimer(this);
+    connect(animationTimer_, SIGNAL(timeout()), this, SLOT(executeNextMove()));
 }
 
 MainWindow::~MainWindow()
@@ -156,7 +163,7 @@ void MainWindow::handleMouseClick(QPointF point)
     handleSceneItemsAtPos(point);
     if ( board_->is_game_over() )
     {
-        background_colour = Qt::yellow;
+        timer_->stop();
         checkGameStatusAndPromptReset();
     }
 }
@@ -170,6 +177,7 @@ void MainWindow::selectPiece(int row, int column)
     {
         std::cout << "Unsuitable selection " << std::endl;
         selected_ = {-1, -1};
+        updateBoardAfterMove();
         return;
     }
 }
@@ -185,11 +193,16 @@ void MainWindow::selectMoveTarget(int row, int column)
     {
         std::cout << "Move not possible" << std::endl;
         target_ = {-1, -1};
+        drawBoard();
         return;
     }
     else if ( board_->move(selected_, target_) )
     {
         ++total_moves_;
+        if ( board_->is_game_over() and total_moves_ <= 31 )
+        {
+            background_colour = Qt::yellow;
+        }
         updateBoardAfterMove();
     } else {
         std::cout << "Illegal move" << std::endl;
@@ -217,7 +230,6 @@ bool MainWindow::isInvalidOrPaused(QPointF point)
 void MainWindow::updateBoardAfterMove()
 {
     board_->move(selected_, target_);
-    board_->print();
     QPen normal_border(Qt::black);
     normal_border.setWidth(0);
     drawBoard();
@@ -254,9 +266,7 @@ void MainWindow::resetButtonPress()
     scene_ = board_;
     // Update the QGraphicsView to use the new scene_
     ui->graphicsView->setScene(scene_);
-    ui->lcdNumberSeconds->display(0);
-    ui->clickCountLabel->setText(QString::number(total_moves_));
-    timer_->stop();
+    resetGameSettings();
     InitBoard();
     // Reconnect the handleMouseClick function to the new board_ instance
     connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
@@ -311,7 +321,7 @@ void MainWindow::checkGameStatusAndPromptReset()
 {
     QMessageBox msgBox;
     msgBox.setText("Congratulations, you won!");
-    msgBox.setInformativeText("Do you want to play again?");
+    msgBox.setInformativeText("Do you want to play again?\n\nYou can also close the application or only this window by clicking 'Cancel'");
     msgBox.setStandardButtons(QMessageBox::Reset | QMessageBox::Close | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Reset);
     msgBox.setWindowTitle("Game won");
@@ -388,4 +398,50 @@ void MainWindow::onPauseButtonClick()
         ui->pauseNotificationLabel->setText("");
     }
     drawIcons();
+}
+
+void MainWindow::resetGameSettings()
+{
+    ui->lcdNumberSeconds->display(0);
+    total_moves_ = 0;
+    selected_ = {-1 , -1};
+    target_ = {-1 , -1};
+    background_colour = Qt::gray;
+    ui->clickCountLabel->setText(QString::number(total_moves_));
+    timer_->stop();
+}
+
+void MainWindow::animateSolution()
+{
+    resetButtonPress();
+    animationTimer_->start(500);
+}
+
+void MainWindow::executeNextMove()
+{
+    if (currentMoveIndex_ >= solutionMoves.size())
+    {
+        // All moves are done, stop the timer
+        animationTimer_->stop();
+        currentMoveIndex_ = 0;
+        return;
+    }
+
+    // Get the next move from the predefined moves list
+    Point selected = solutionMoves[currentMoveIndex_].first;
+    Point target = solutionMoves[currentMoveIndex_].second;
+
+    // Perform the move on the board
+    if (board_->move(selected, target))
+    {
+        ++total_moves_;
+        updateBoardAfterMove();
+    }
+    else
+    {
+        qDebug() << "Illegal move in predefined moves list";
+    }
+
+    // Increment the current move index
+    currentMoveIndex_++;
 }

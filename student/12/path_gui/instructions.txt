@@ -15,18 +15,20 @@ Extra features implemented:
 
 1. The user can choose the colors of the game pieces by using the sliders on the right
 2. Icons have been used for Reset, Pause, and Close icons in addition to text
-3. TODO
+3. The game has an animation feature that shows a perfect solution with 31 moves.
 4. TODO
 5. TODO
-6. The game starts with grey background colour. After a successful win with 31 moves, it changes to golden yellow background. Resetting the game sets original colour. (TODO)
+6. The game starts with grey background colour. After a successful win with 31 moves, it changes to golden yellow background. Resetting the game sets original colour.
 7. TODO
 8. The game has a pause button, from which the player can pause the timer. This is possible only when the game is on. The game does not respond when it is paused. The game informs user about the pause using labels on screen.
 9. TODO
 
 Program structure and design decisions
 
-- The game works by using GraphicsView objects as pieces and piece slots
+- The game works by using GraphicsView scene and objects as pieces and empty slots
 - The logic is directly based on gameboard.hh
+- The game works by having two points (selected_ and target_). As the user clicks around, these will be switched to points on the gameboard.
+- Selected and target are both initialized as {-1,-1} as that is a coordinate that does not exist on the board. This value is handled as "unselected".
 
 The dependencies and game situations
 
