@@ -125,80 +125,110 @@ void MainWindow::InitBoard()
 
 void MainWindow::handleMouseClick(QPointF point)
 {
-    if (point.isNull())
+    if ( isInvalidOrPaused(point) )
     {
-        std::cout << point.x() << point.y() << std::endl;
-        return;
-    }
-    if (paused_)
-    {
-        std::cout << "Game is paused. Press continue to unpause" << std::endl;
-        ui->pauseNotificationLabel->setText("Game is paused!");
         return;
     }
 
     int x = static_cast<int>(point.x());
     int y = static_cast<int>(point.y());
-
     int row = ((x - BORDER_OFFSET) / MARGIN) + 0;
     int column = ((y - BORDER_OFFSET) / MARGIN) + 0;
 
-    if (board_->is_valid_point({row, column}))
+    if ( board_->is_valid_point({row, column}) )
     {
         //If nothing yet selected, pick a piece to move
         if (selected_.x == -1 && selected_.y == -1)
         {
-            selected_.x = row;
-            selected_.y = column;
-            if (board_->which_slot({selected_.x, selected_.y}) == EMPTY or
-                    board_->which_slot({selected_.x, selected_.y}) == UNUSED)
-            {
-                std::cout << "Unsuitable selection " << std::endl;
-                selected_ = {-1, -1};
-                return;
-            }
+            selectPiece(row, column);
         }
-        //Otherwise pick a target for selection
+        //Otherwise pick a target for to move into
         else
         {
-            target_.x = row;
-            target_.y = column;
-
-            if (board_->which_slot({target_.x, target_.y}) == RED or
-                    board_->which_slot({target_.x, target_.y}) == UNUSED)
-            {
-                std::cout << "Move not possible" << std::endl;
-                target_ = {-1, -1};
-                return;
-            }
-            else if (board_->move(selected_, target_))
-            {
-                board_->move(selected_, target_);
-
-                board_->print();
-                std::cout << "Source XY: " << selected_.x + 1 <<  selected_.y + 1 << std::endl;
-                std::cout << "Target XY: " << target_.x + 1 <<  target_.y + 1 << std::endl;
-                board_->print();
-                QPen normal_border(Qt::black);
-                normal_border.setWidth(0);
-                drawBoard();
-                std::cout << board_->get_total_moves() << std::endl;
-                ui->clickCountLabel->setText(QString::number(board_->get_total_moves()));
-            } else {
-                std::cout << "Illegal move" << std::endl;
-            }
-            target_ = {-1, -1};
-            selected_ = {-1, -1};
+            selectMoveTarget(row, column);
         }
     }
     else
     {
         std::cout << "Not a valid point" << std::endl;
+        return;
     }
-    // Get the list of items at the clicked scene position
+    handleSceneItemsAtPos(point);
+    if ( board_->is_game_over() )
+    {
+        background_colour = Qt::yellow;
+        checkGameStatusAndPromptReset();
+    }
+}
+
+void MainWindow::selectPiece(int row, int column)
+{
+    selected_.x = row;
+    selected_.y = column;
+    if (board_->which_slot({selected_.x, selected_.y}) == EMPTY or
+            board_->which_slot({selected_.x, selected_.y}) == UNUSED)
+    {
+        std::cout << "Unsuitable selection " << std::endl;
+        selected_ = {-1, -1};
+        return;
+    }
+}
+
+void MainWindow::selectMoveTarget(int row, int column)
+{
+    target_.x = row;
+    target_.y = column;
+
+    if ( board_->which_slot({target_.x, target_.y}) == RED or
+         board_->which_slot({target_.x, target_.y}) == UNUSED or
+        ( target_.x == selected_.x and target_.y == selected_.y) )
+    {
+        std::cout << "Move not possible" << std::endl;
+        target_ = {-1, -1};
+        return;
+    }
+    else if ( board_->move(selected_, target_) )
+    {
+        ++total_moves_;
+        updateBoardAfterMove();
+    } else {
+        std::cout << "Illegal move" << std::endl;
+    }
+    target_ = {-1, -1};
+    selected_ = {-1, -1};
+}
+
+bool MainWindow::isInvalidOrPaused(QPointF point)
+{
+    if (point.isNull())
+    {
+        std::cout << point.x() << point.y() << std::endl;
+        return true;
+    }
+    if (paused_)
+    {
+        std::cout << "Game is paused. Press continue to unpause" << std::endl;
+        ui->pauseNotificationLabel->setText("Game is paused!");
+        return true;
+    }
+    return false;
+}
+
+void MainWindow::updateBoardAfterMove()
+{
+    board_->move(selected_, target_);
+    board_->print();
+    QPen normal_border(Qt::black);
+    normal_border.setWidth(0);
+    drawBoard();
+    std::cout << total_moves_ << std::endl;
+    ui->clickCountLabel->setText(QString::number(total_moves_));
+}
+
+void MainWindow::handleSceneItemsAtPos(QPointF point)
+{
     QList<QGraphicsItem*> itemsAtPos = scene_->items(point);
 
-    // Iterate through the items and check if any of them are QGraphicsEllipseItem
     for (QGraphicsItem* item : itemsAtPos)
     {
         QGraphicsEllipseItem* circle = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
@@ -207,35 +237,11 @@ void MainWindow::handleMouseClick(QPointF point)
             QPen thick_border(Qt::black);
             thick_border.setWidth(3);
             circle->setPen(thick_border);
-            if (not timer_->isActive())
+            if (!timer_->isActive())
             {
                 timer_->start(1000);
             }
         }
-    }
-    if (board_->is_game_over())
-    {
-        background_colour = Qt::yellow;
-        checkGameStatusAndPromptReset();
-    }
-}
-
-
-void MainWindow::handle_piece_click()
-{
-    for (auto& piece : pieces_)
-    {
-        std::cout << piece << std::endl;
-    }
-}
-
-// Checks if the coordinate has a useful piece
-// and marks it as selected
-void MainWindow::selectPiece(int row, int column)
-{
-    if (board_->which_slot({row, column}) )
-    {
-
     }
 }
 
@@ -249,11 +255,16 @@ void MainWindow::resetButtonPress()
     // Update the QGraphicsView to use the new scene_
     ui->graphicsView->setScene(scene_);
     ui->lcdNumberSeconds->display(0);
-    ui->clickCountLabel->setText(QString::number(board_->get_total_moves()));
+    ui->clickCountLabel->setText(QString::number(total_moves_));
     timer_->stop();
     InitBoard();
     // Reconnect the handleMouseClick function to the new board_ instance
     connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
+
+    if( paused_ )
+    {
+        onPauseButtonClick();
+    }
 }
 
 void MainWindow::update()

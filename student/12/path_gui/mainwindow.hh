@@ -47,13 +47,21 @@ private slots:
 
     void drawBoard();
 
-    void selectPiece(int row, int column);
-
     void onColorChanged();
 
     void onBottomColorChanged();
 
     void onPauseButtonClick();
+
+    void selectMoveTarget(int row, int column);
+
+    void updateBoardAfterMove();
+
+    void selectPiece(int row, int column);
+
+    bool isInvalidOrPaused(QPointF point);
+
+    void handleSceneItemsAtPos(QPointF point);
 
 private:
     Ui::MainWindow *ui;
@@ -72,6 +80,8 @@ private:
     QTimer* timer_;
     // Vector containing game pieces
     std::vector<QGraphicsEllipseItem*> pieces_;
+
+    unsigned int total_moves_ = 0;
 
     QColor background_colour = Qt::gray;
     QColor top_colour = Qt::green;
