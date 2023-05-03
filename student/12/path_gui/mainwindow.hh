@@ -1,7 +1,6 @@
 /* -----------------
  * COMP.CS.110 Ohjelmointi 2: Rakenteet / Programming 2: Structures
  * -----------------
- * MainWindow is the window in which a simple Path game can be played on
  *
  * Desc:
  *   This code represents an UI implementation of the Path game, that is
@@ -54,6 +53,22 @@ public:
     ~MainWindow();
 
 private slots:
+
+    /**
+     * @brief Takes care of setting up the UI elements in the main window.
+     */
+    void setupUI();
+
+    /**
+     * @brief Sets up the color sliders for the top and bottom color pickers.
+     */
+    void setupColorSliders();
+
+    /**
+     * @brief Sets up the timers and their connections.
+     */
+    void setupTimers();
+
     /**
      * @brief Processes the mouse click events on the game board, handling piece
      * selection and moving them.
@@ -179,6 +194,8 @@ private:
     // The pauseButtonIcon will change to reflect that
     bool paused_ = false;
     std::string pauseButtonIcon_ = ":/pause.png";
+    std::string resetButtonIcon_ = ":/reset.png";
+    std::string closeButtonIcon_ = ":/close.png";
 
     //H ow large the game pieces appear
     const int PIECE_SIZE = 30;
@@ -186,8 +203,18 @@ private:
     const int MARGIN = 60;
     const int BORDER_OFFSET = 10;
 
-    // Colorpicker tops at 256 colours
-    const int RGB_VALUE_MAX = 255;
+    // Colorpicker tops at 255
+    const int RGB_MAX = 255;
+
+    const int GRAPHICS_VIEW_SIZE = 350;
+    const int SCENE_WIDTH = 240;
+    const int SCENE_HEIGHT = 300;
+    const int TIMER_INTERVAL = 1000;
+    const int THICK_BORDER_WIDTH = 3;
+    const unsigned int MIN_MOVE_COUNT = 31;
+    const int ANIMATION_TIMER_INTERVAL = 200;
+    const int ICON_SCALED_SIZE = 50;
+    const int BOARD_SIZE = 5;
 
     // Index for executing all solutionMoves below
     std::size_t currentMoveIndex_ = 0;

@@ -16,81 +16,101 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //board_ = GameBoard();
     // We need a graphics scene in which to draw the gameboard
     scene_ = board_;
 
-    // The width  and height of the graphicsView
-    ui->graphicsView->setGeometry(20, 50, 350, 350);
+    // Connecting buttons and formatting the elements
+    setupUI();
+
+    // Connecting graphicsView to the scene
     ui->graphicsView->setScene(scene_);
 
     // The dimensions of the scene
-    scene_->setSceneRect(0, 0, 240, 300);
+    scene_->setSceneRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
 
-    // Setting timer color
-    ui->lcdNumberSeconds->setPalette(QColor(255, 255, 255));
-    ui->lcdNumberSeconds->setAutoFillBackground(true);
-
-    // Setting other variables for timer to update per second
-    timer_ = new QTimer(this);
-    connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
-
-    // Defining the color and outline of the circle
+    // Defining the board and backgroundcolour
     InitBoard();
     setBackgroundColor();
-    connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
-    connect(ui->resetButton, &QPushButton::clicked, this, &MainWindow::resetButtonPress);
 
-    ui->pauseNotificationLabel->setStyleSheet("color: red;");
+    // Setting up UI elements
+    setupColorSliders();
+    setupTimers();
 
-//NOTE THIS IS COLORPICKER CODE:
-    ui->horizontalSliderRed->setMinimum(0);
-    ui->horizontalSliderRed->setMaximum(RGB_VALUE_MAX);
-
-    ui->horizontalSliderGreen->setMinimum(0);
-    ui->horizontalSliderGreen->setMaximum(RGB_VALUE_MAX);
-
-    ui->horizontalSliderBlue->setMinimum(0);
-    ui->horizontalSliderBlue->setMaximum(RGB_VALUE_MAX);
-
-    connect(ui->horizontalSliderRed, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
-    connect(ui->horizontalSliderGreen, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
-    connect(ui->horizontalSliderBlue, &QSlider::valueChanged, this, &MainWindow::onColorChanged);
-
-    ui->horizontalSliderGreen->setValue(RGB_VALUE_MAX);
-
-    //This is for Bottom colour picker
-    ui->horizontalSliderRedBottom->setMinimum(0);
-    ui->horizontalSliderRedBottom->setMaximum(RGB_VALUE_MAX);
-
-    ui->horizontalSliderGreenBottom->setMinimum(0);
-    ui->horizontalSliderGreenBottom->setMaximum(RGB_VALUE_MAX);
-
-    ui->horizontalSliderBlueBottom->setMinimum(0);
-    ui->horizontalSliderBlueBottom->setMaximum(RGB_VALUE_MAX);
-
-    connect(ui->horizontalSliderRedBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
-    connect(ui->horizontalSliderGreenBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
-    connect(ui->horizontalSliderBlueBottom, &QSlider::valueChanged, this, &MainWindow::onBottomColorChanged);
-
-    ui->horizontalSliderRedBottom->setValue(RGB_VALUE_MAX);
-
-    //Define Pause button
-    connect(ui->pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClick);
-
-    //Define 'show me the solution' button
-    connect(ui->hintButton, &QPushButton::clicked, this, &MainWindow::animateSolution);
-
-    animationTimer_ = new QTimer(this);
-    connect(animationTimer_, SIGNAL(timeout()), this, SLOT(executeNextMove()));
+    ui->resetButton->setDisabled(true);
 }
 
+// Destructor to remove pointers for ui and gameboard
 MainWindow::~MainWindow()
 {
     delete ui;
     delete board_;
 }
 
+// This method sets up the UI elements, connecting buttons and formatting elements
+void MainWindow::setupUI()
+{
+    // Setting timer color
+    ui->graphicsView->setGeometry(20, 50, GRAPHICS_VIEW_SIZE, GRAPHICS_VIEW_SIZE);
+    ui->lcdNumberSeconds->setPalette(QColor(RGB_MAX, RGB_MAX, RGB_MAX));
+    ui->lcdNumberSeconds->setAutoFillBackground(true);
+    ui->pauseNotificationLabel->setStyleSheet("color: red;");
+
+    // Buttons setup
+    connect(ui->resetButton, &QPushButton::clicked, this,
+            &MainWindow::resetButtonPress);
+    connect(ui->pauseButton, &QPushButton::clicked, this,
+            &MainWindow::onPauseButtonClick);
+    connect(ui->hintButton, &QPushButton::clicked, this,
+            &MainWindow::animateSolution);
+
+    // Mouse click connected to game pieces and gameboard.hh
+    connect(board_, &GameBoard::mouseClicked, this,
+            &MainWindow::handleMouseClick);
+}
+
+// This method sets up the color sliders for changing the colors of the game pieces
+void MainWindow::setupColorSliders()
+{
+    ui->horizontalSliderRed->setRange(0, RGB_MAX);
+    ui->horizontalSliderGreen->setRange(0, RGB_MAX);
+    ui->horizontalSliderBlue->setRange(0, RGB_MAX);
+
+    ui->horizontalSliderRedBottom->setRange(0, RGB_MAX);
+    ui->horizontalSliderGreenBottom->setRange(0, RGB_MAX);
+    ui->horizontalSliderBlueBottom->setRange(0, RGB_MAX);
+
+    // Connecting top sliders to value onColorChanged method
+    connect(ui->horizontalSliderRed, &QSlider::valueChanged, this,
+            &MainWindow::onColorChanged);
+    connect(ui->horizontalSliderGreen, &QSlider::valueChanged, this,
+            &MainWindow::onColorChanged);
+    connect(ui->horizontalSliderBlue, &QSlider::valueChanged, this,
+            &MainWindow::onColorChanged);
+
+    // Bottom sliders have onBottomColorChanged
+    connect(ui->horizontalSliderRedBottom, &QSlider::valueChanged, this,
+            &MainWindow::onBottomColorChanged);
+    connect(ui->horizontalSliderGreenBottom, &QSlider::valueChanged, this,
+            &MainWindow::onBottomColorChanged);
+    connect(ui->horizontalSliderBlueBottom, &QSlider::valueChanged, this,
+            &MainWindow::onBottomColorChanged);
+
+    ui->horizontalSliderGreen->setValue(RGB_MAX);
+    ui->horizontalSliderRedBottom->setValue(RGB_MAX);
+}
+
+// This method sets up the game timers
+void MainWindow::setupTimers()
+{
+    timer_ = new QTimer(this);
+    connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
+
+    animationTimer_ = new QTimer(this);
+    connect(animationTimer_, SIGNAL(timeout()), this, SLOT(executeNextMove()));
+}
+
+// Sets the background color to whichever background_color points
+// This will change once game has been won
 void MainWindow::setBackgroundColor()
 {
     QPalette pal = QPalette();
@@ -101,11 +121,13 @@ void MainWindow::setBackgroundColor()
     this->setPalette(pal);
 }
 
+// InitBoard function initializes the game board, creating the pieces and
+// setting their initial positions, colors, and visual representation.
 void MainWindow::InitBoard()
 {
-    for(auto i = 0; i < 5; ++i)
+    for(auto i = 0; i < BOARD_SIZE; ++i)
     {
-        for(auto j = 0; j < 5; ++j)
+        for(auto j = 0; j < BOARD_SIZE; ++j)
         {
             if (board_->is_valid_point({i,j}))
             {
@@ -129,6 +151,9 @@ void MainWindow::InitBoard()
     }
 }
 
+// handleMouseClick function is called when a mouse click occurs on the game board.
+// It handles the game logic based on the current state of the game, such as
+// selecting a piece, moving a piece, checking for the end of the game, and so on.
 void MainWindow::handleMouseClick(QPointF point)
 {
     if ( isInvalidOrPaused(point) )
@@ -167,10 +192,15 @@ void MainWindow::handleMouseClick(QPointF point)
     }
 }
 
+// This function is called when the user clicks on a valid game piece to move.
+// It assigns the piece's position to the selected_ member variable.
 void MainWindow::selectPiece(int row, int column)
 {
     selected_.x = row;
     selected_.y = column;
+    //If the clicked position has an EMPTY or UNUSED slot, the function resets
+    // the selected_ variable to an invalid position (-1, -1) and updates the
+    // board after the move.
     if (board_->which_slot({selected_.x, selected_.y}) == EMPTY or
             board_->which_slot({selected_.x, selected_.y}) == UNUSED)
     {
@@ -181,6 +211,10 @@ void MainWindow::selectPiece(int row, int column)
     }
 }
 
+// This function is called when the user clicks on a valid target position for the selected
+// game piece to move into. It assigns the target position to the target_ member variable
+// and checks whether the move is valid. If the target position is not valid, the function
+// resets the selected_ and target_ variables to an invalid position, and redraws the board.
 void MainWindow::selectMoveTarget(int row, int column)
 {
     target_.x = row;
@@ -196,10 +230,13 @@ void MainWindow::selectMoveTarget(int row, int column)
         drawBoard();
         return;
     }
+    // If the move is valid, it updates the board after the move and checks
+    // if the game is over.
     else if ( board_->move(selected_, target_) )
     {
         ++total_moves_;
-        if ( board_->is_game_over() and total_moves_ <= 31 )
+        ui->resetButton->setEnabled(true);
+        if ( board_->is_game_over() and total_moves_ <= MIN_MOVE_COUNT )
         {
             background_colour = Qt::yellow;
         }
@@ -212,6 +249,7 @@ void MainWindow::selectMoveTarget(int row, int column)
     drawBoard();
 }
 
+// Checks the validity of a point, and whether the game is paused
 bool MainWindow::isInvalidOrPaused(QPointF point)
 {
     if (point.isNull())
@@ -228,6 +266,7 @@ bool MainWindow::isInvalidOrPaused(QPointF point)
     return false;
 }
 
+// Moves the pieces on gameboard and updates UI to reflect that
 void MainWindow::updateBoardAfterMove()
 {
     board_->move(selected_, target_);
@@ -238,26 +277,29 @@ void MainWindow::updateBoardAfterMove()
     ui->clickCountLabel->setText(QString::number(total_moves_));
 }
 
+// Highlights pieces that are selected. Starts the timer
 void MainWindow::handleSceneItemsAtPos(QPointF point)
 {
     QList<QGraphicsItem*> itemsAtPos = scene_->items(point);
 
     for (QGraphicsItem* item : itemsAtPos)
     {
-        QGraphicsEllipseItem* circle = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+        QGraphicsEllipseItem* circle =
+                qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
         if (circle)
         {
             QPen thick_border(Qt::black);
-            thick_border.setWidth(3);
+            thick_border.setWidth(THICK_BORDER_WIDTH);
             circle->setPen(thick_border);
             if (!timer_->isActive())
             {
-                timer_->start(1000);
+                timer_->start(TIMER_INTERVAL);
             }
         }
     }
 }
 
+// Resets the game back to normal once reset button is pressed
 void MainWindow::resetButtonPress()
 {
     scene_->clear();
@@ -279,6 +321,7 @@ void MainWindow::resetButtonPress()
     }
 }
 
+// Updates the game clock
 void MainWindow::update()
 {
     int seconds = ui->lcdNumberSeconds->intValue();
@@ -286,6 +329,7 @@ void MainWindow::update()
     ui->lcdNumberSeconds->display(seconds);
 }
 
+// Draws elements on the scene
 void MainWindow::drawBoard()
 {
     scene_->clear();
@@ -293,9 +337,9 @@ void MainWindow::drawBoard()
 
     drawIcons();
 
-    for(auto i = 0; i < 5; ++i)
+    for(auto i = 0; i < BOARD_SIZE; ++i)
     {
-        for(auto j = 0; j < 5; ++j)
+        for(auto j = 0; j < BOARD_SIZE; ++j)
         {
             if (board_->is_valid_point({i,j}))
             {
@@ -319,12 +363,15 @@ void MainWindow::drawBoard()
     }
 }
 
+// Victory screen once game is complete
 void MainWindow::victoryPromptWindow()
 {
     QMessageBox msgBox;
     msgBox.setText("Congratulations, you won!");
-    msgBox.setInformativeText("Do you want to play again?\n\nYou can also close the application or only this window by clicking 'Cancel'");
-    msgBox.setStandardButtons(QMessageBox::Reset | QMessageBox::Close | QMessageBox::Cancel);
+    msgBox.setInformativeText("Do you want to play again?\n\nYou can also close "
+    "the application or only this window by clicking 'Cancel'");
+    msgBox.setStandardButtons(QMessageBox::Reset | QMessageBox::Close |
+                              QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Reset);
     msgBox.setWindowTitle("Game won");
     int ret = msgBox.exec();
@@ -346,6 +393,7 @@ void MainWindow::victoryPromptWindow()
     }
 }
 
+// Function to change top piece colours with the slider
 void MainWindow::onColorChanged()
 {
     QColor selectedColor(ui->horizontalSliderRed->value(),
@@ -355,6 +403,7 @@ void MainWindow::onColorChanged()
     drawBoard();
 }
 
+// Function to change bottom piece colours with the slider
 void MainWindow::onBottomColorChanged()
 {
     QColor selectedColor(ui->horizontalSliderRedBottom->value(),
@@ -364,13 +413,14 @@ void MainWindow::onBottomColorChanged()
     drawBoard();
 }
 
+// Drawing icons for the buttons
 void MainWindow::drawIcons()
 {
-    QPixmap resetLogo(QString::fromStdString(":/reset.png"));
+    QPixmap resetLogo(QString::fromStdString(resetButtonIcon_));
     QPixmap pauseLogo(QString::fromStdString(pauseButtonIcon_));
-    QPixmap closeLogo(QString::fromStdString(":/close.png"));
-    resetLogo = resetLogo.scaled(50, 50);
-    pauseLogo = pauseLogo.scaled(50, 50);
+    QPixmap closeLogo(QString::fromStdString(closeButtonIcon_));
+    resetLogo = resetLogo.scaled(ICON_SCALED_SIZE, ICON_SCALED_SIZE);
+    pauseLogo = pauseLogo.scaled(ICON_SCALED_SIZE, ICON_SCALED_SIZE);
     closeLogo = closeLogo.scaled(50, 50);
 
     ui->resetButton->setGeometry(20, 10, 90, 30);
@@ -383,6 +433,7 @@ void MainWindow::drawIcons()
     ui->closeButton->setIcon(closeLogo);
 }
 
+// Handles pauseButton presses. Changes the icon as well
 void MainWindow::onPauseButtonClick()
 {
     if (!paused_)
@@ -395,13 +446,14 @@ void MainWindow::onPauseButtonClick()
     {
         pauseButtonIcon_ = ":/pause.png";
         ui->pauseButton->setText("Pause");
-        timer_->start(1000);
+        timer_->start(TIMER_INTERVAL);
         paused_ = false;
         ui->pauseNotificationLabel->setText("");
     }
     drawIcons();
 }
 
+// Resets game settings
 void MainWindow::resetGameSettings()
 {
     ui->lcdNumberSeconds->display(0);
@@ -410,15 +462,21 @@ void MainWindow::resetGameSettings()
     target_ = {-1 , -1};
     background_colour = Qt::gray;
     ui->clickCountLabel->setText(QString::number(total_moves_));
+    ui->resetButton->setDisabled(true);
+    ui->pauseNotificationLabel->setText("");
     timer_->stop();
 }
 
+// Animates solution moves with a timer
 void MainWindow::animateSolution()
 {
     resetButtonPress();
-    animationTimer_->start(200);
+    animationTimer_->start(ANIMATION_TIMER_INTERVAL);
+    ui->pauseButton->setDisabled(true);
+    paused_ = true;
 }
 
+// Conducts moves based on previously defined solution list
 void MainWindow::executeNextMove()
 {
     if (currentMoveIndex_ >= solutionMoves.size())
@@ -427,6 +485,8 @@ void MainWindow::executeNextMove()
         animationTimer_->stop();
         currentMoveIndex_ = 0;
         background_colour = Qt::yellow;
+        ui->pauseButton->setEnabled(true);
+        paused_ = false;
         updateBoardAfterMove();
         return;
     }
