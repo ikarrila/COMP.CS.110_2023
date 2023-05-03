@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>601</width>
-    <height>490</height>
+    <height>494</height>
    </rect>
   </property>
   <property name="font">
@@ -19,6 +19,9 @@
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGraphicsView" name="graphicsView">
@@ -93,7 +96,7 @@
      <string>Pause</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="totalMovesLabel">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -181,7 +184,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="topColourInfoLabel">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -201,7 +204,7 @@
      <string>Set colour for top pieces</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="bottomColourInfoLabel">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -328,6 +331,32 @@
     </property>
     <property name="text">
      <string>Show hint</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="hintLabel">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>410</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="text">
+     <string>Shows the solution, but you will have to start from the beginning</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

@@ -81,7 +81,6 @@ MainWindow::MainWindow(QWidget *parent)
     //Define 'show me the solution' button
     connect(ui->hintButton, &QPushButton::clicked, this, &MainWindow::animateSolution);
 
-    currentMoveIndex_ = 0;
     animationTimer_ = new QTimer(this);
     connect(animationTimer_, SIGNAL(timeout()), this, SLOT(executeNextMove()));
 }
@@ -148,6 +147,7 @@ void MainWindow::handleMouseClick(QPointF point)
         if (selected_.x == -1 && selected_.y == -1)
         {
             selectPiece(row, column);
+            handleSceneItemsAtPos(point);
         }
         //Otherwise pick a target for to move into
         else
@@ -160,11 +160,10 @@ void MainWindow::handleMouseClick(QPointF point)
         std::cout << "Not a valid point" << std::endl;
         return;
     }
-    handleSceneItemsAtPos(point);
     if ( board_->is_game_over() )
     {
         timer_->stop();
-        checkGameStatusAndPromptReset();
+        victoryPromptWindow();
     }
 }
 
@@ -192,6 +191,7 @@ void MainWindow::selectMoveTarget(int row, int column)
         ( target_.x == selected_.x and target_.y == selected_.y) )
     {
         std::cout << "Move not possible" << std::endl;
+        selected_ = {-1, -1};
         target_ = {-1, -1};
         drawBoard();
         return;
@@ -209,6 +209,7 @@ void MainWindow::selectMoveTarget(int row, int column)
     }
     target_ = {-1, -1};
     selected_ = {-1, -1};
+    drawBoard();
 }
 
 bool MainWindow::isInvalidOrPaused(QPointF point)
@@ -268,6 +269,7 @@ void MainWindow::resetButtonPress()
     ui->graphicsView->setScene(scene_);
     resetGameSettings();
     InitBoard();
+    drawBoard();
     // Reconnect the handleMouseClick function to the new board_ instance
     connect(board_, &GameBoard::mouseClicked, this, &MainWindow::handleMouseClick);
 
@@ -317,7 +319,7 @@ void MainWindow::drawBoard()
     }
 }
 
-void MainWindow::checkGameStatusAndPromptReset()
+void MainWindow::victoryPromptWindow()
 {
     QMessageBox msgBox;
     msgBox.setText("Congratulations, you won!");
@@ -414,7 +416,7 @@ void MainWindow::resetGameSettings()
 void MainWindow::animateSolution()
 {
     resetButtonPress();
-    animationTimer_->start(500);
+    animationTimer_->start(200);
 }
 
 void MainWindow::executeNextMove()
@@ -424,6 +426,8 @@ void MainWindow::executeNextMove()
         // All moves are done, stop the timer
         animationTimer_->stop();
         currentMoveIndex_ = 0;
+        background_colour = Qt::yellow;
+        updateBoardAfterMove();
         return;
     }
 
