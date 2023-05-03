@@ -2,6 +2,15 @@ Rules of the game:
 
 Move pieces so that the ones on the top and bottom row switch places. Points are given based on time and efficiency. (number of moves)
 
+How-To-Use
+- Game opens directly on a new window.
+- Pick a piece from either top or bottom row by clicking. The piece will be highlighted.
+- Pick an empty slot (grey) by clicking it, the piece will move.
+- A timer has started ticking and the UI should inform that 1 move has been made.
+- Continue until top and bottom rows switch places. Victory screen will emerge.
+- You can play as many times as you like or watch a perfect solution by clicking "Show hint"
+- Piece colours can be changed by using the sliders on the right.
+
 Basic functions:
 
 - The game field is shown graphically using QT GraphicsView objects.
@@ -16,23 +25,31 @@ Extra features implemented:
 1. The user can choose the colors of the game pieces by using the sliders on the right
 2. Icons have been used for Reset, Pause, and Close icons in addition to text
 3. The game has an animation feature that shows a perfect solution with 31 moves.
-4. TODO
-5. TODO
+4. -
+5. -
 6. The game starts with grey background colour. After a successful win with 31 moves, it changes to golden yellow background. Resetting the game sets original colour.
-7. TODO
-8. The game has a pause button, from which the player can pause the timer. This is possible only when the game is on. The game does not respond when it is paused. The game informs user about the pause using labels on screen.
-9. TODO
+7. -
+8. The game has a pause button, from which the player can pause the timer. This is possible only when the game is on. The game does not respond when it is paused. Game informs user about the pause using labels on screen.
+9. -
 
 Program structure and design decisions
 
 - The game works by using GraphicsView scene and objects as pieces and empty slots
-- The logic is directly based on gameboard.hh
+- The in-game logic is directly based on gameboard.hh
 - The game works by having two points (selected_ and target_). As the user clicks around, these will be switched to points on the gameboard.
 - Selected and target are both initialized as {-1,-1} as that is a coordinate that does not exist on the board. This value is handled as "unselected".
+- Reset, pause and close were done using pushButtons, as pushButton has many ready-made functions, such as
+setEnabled and good integration with the slots/signals.
+- Colour change done using sliders as that seemed most intuitive approach.
+- There are some initially hidden labels, for instance one that informs the user when the game is paused, if 
+the user tries to move while pause is on.
 
 The dependencies and game situations
 
-- Timer starts only after the first move has been made and runs until victory screen is shown or pause button clicked
-- Sliders on the right side change piece colours in real time
-- After the game has been won, a victory screen presents three options: Reset and start a new game, close the screen to look at the game board, and exit the whole program
+- Timer starts only after the first move has been made and runs until victory screen is shown or pause button clicked.
+- Sliders on the right side change piece colours in real time. This can be done at any time.
+- Watching the Hint solution will deactivate both moving pieces, as well as the Pause button.
+- Reset button can only be pressed when a move has been made.
+- After the game has been won, a victory screen presents three options: Reset and start a new game, close the screen to look at the game board, and exit the whole program. Colour will change if victory is achieved in 
+31 moves.
 
